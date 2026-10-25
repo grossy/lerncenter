@@ -304,3 +304,32 @@ mark { background: var(--accent-soft); color: inherit; padding: 0 .3em; border-r
 .flash-back { font-size: 1.4rem; color: var(--accent); font-weight: 700; margin-top: .25em; min-height: 1.4em; }
 ul.plain { list-style: none; margin: 0; padding: 0; font-size: .95rem; }
 ul.plain li { padding: .15em 0; }
+
+/* ---------- Instrument switch + pads ---------- */
+.instrument .inst-bar { display: flex; justify-content: flex-end; align-items: center; gap: .75rem; margin-bottom: .6rem; }
+.inst-hint { color: var(--muted); font-size: .85rem; text-align: right; }
+.pads-wrap { max-width: 460px; margin: 0 auto; }
+.pads { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; background: #1a1a1a; padding: 6px; border-radius: 10px; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+.pad {
+  position: relative; aspect-ratio: 1; border-radius: 5px; background: #2d2d2d; color: #777;
+  display: flex; align-items: center; justify-content: center; font-size: .72rem; font-weight: 600; cursor: pointer;
+  transition: background .12s, filter .08s;
+}
+.pad .lbl sub { font-size: .55em; vertical-align: baseline; opacity: .7; }
+.pad.inkey { background: #4b4b4b; color: #ddd; }
+.pad.isroot { background: #5a5a7a; color: #fff; }
+.pad.pressed { filter: brightness(1.7); }
+.pad.root { background: var(--accent) !important; color: #fff !important; }
+.pad.major { background: var(--major) !important; color: #222 !important; }
+.pad.minor { background: var(--minor) !important; color: #0b2a33 !important; }
+.pad.step { background: var(--accent-soft) !important; color: var(--text) !important; }
+.pad .badge {
+  position: absolute; top: 3px; right: 3px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 999px;
+  background: #fff; color: #111; font-size: .62rem; font-weight: 700; display: flex; align-items: center; justify-content: center;
+}
+.pad .badge.major { background: var(--major); color: #222; }
+.pad .badge.minor { background: var(--minor); color: #0b2a33; }
+.pad .badge.root { background: var(--accent); color: #fff; }
+.pads-foot { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-top: .5rem; color: var(--muted); font-size: .85rem; font-weight: 600; }
+.pads-foot .chip { padding: .25em .7em; font-size: .85rem; }
+@media (max-width: 480px) { .pad { font-size: .6rem; } .pad .badge { min-width: 15px; height: 15px; font-size: .55rem; } }

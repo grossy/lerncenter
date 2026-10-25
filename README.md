@@ -30,6 +30,7 @@ Dann <http://localhost:5173> öffnen.
 - `js/piano.js` – Klaviatur-Komponente
 - `js/lessons/terzen.js` – Inhalt und Widgets der Terzen-Lektion
 - `js/map.js` – klickbare Europakarte (SVG), `js/data/europe-map.js` – vorberechnete Länderumrisse
+- `js/pads.js` – 8×8-Pad-Grid im isomorphen Fourths-Layout (Push/Launchpad), `js/instrument.js` – Piano/Pads-Umschalter
 - `js/widgets.js` – gemeinsame Akkord-Widgets (Loop-Player, Voicing-Schritte, Root-Wechsel, Arpeggiator)
 - `js/lessons/harmonic-shift.js`, `js/lessons/constellations.js` – englische Erwachsenen-Lektionen
 - `js/lessons/index.js` – Katalog aller Lektionen (Titel, Fach, Klassenstufe, Farbe, Loader)

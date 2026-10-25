@@ -1,6 +1,7 @@
 // Shared, chord-oriented widgets for lessons (English-named notes).
 import { playNote, playChord, createLoop } from './audio.js';
-import { createPiano, noteName } from './piano.js';
+import { noteName } from './piano.js';
+import { createInstrument } from './instrument.js';
 import { h } from './lesson.js';
 
 export const nn = (m, flat = false) => noteName(m, { names: 'en', flat });
@@ -53,7 +54,7 @@ export function arpEvents(chord, b, { vel = 0.3, type = 'pluck' } = {}) {
 export function loopPlayer({ chords, range, bpm = 84, variants, build, showSteps = false, pulseSteps = [] }) {
   return (host) => {
     let variant = 0, loop = null, events = [];
-    const piano = createPiano({ ...range, names: 'en', onKey: (m) => playNote(m, { type: 'pad' }) });
+    const piano = createInstrument({ ...range, names: 'en', onKey: (m) => playNote(m, { type: 'pad' }) });
     host.appendChild(piano.el);
     const setBass = bassLine(host);
     const barsEl = h(`<div class="bars"></div>`);
@@ -127,7 +128,7 @@ export function loopPlayer({ chords, range, bpm = 84, variants, build, showSteps
 export function voicingWidget(steps, { range, root, quality, cls, flat = false }) {
   return (host) => {
     let i = 0;
-    const piano = createPiano({ ...range, names: 'en', onKey: (m) => playNote(m, { type: 'pad' }) });
+    const piano = createInstrument({ ...range, names: 'en', onKey: (m) => playNote(m, { type: 'pad' }) });
     host.appendChild(piano.el);
     const setBass = bassLine(host);
     host.appendChild(h(`
@@ -169,7 +170,7 @@ export function voicingWidget(steps, { range, root, quality, cls, flat = false }
  */
 export function rootSwitchWidget({ notes, range, options }) {
   return (host) => {
-    const piano = createPiano({ ...range, names: 'en', onKey: (m) => playNote(m, { type: 'pad' }) });
+    const piano = createInstrument({ ...range, names: 'en', onKey: (m) => playNote(m, { type: 'pad' }) });
     host.appendChild(piano.el);
     const setBass = bassLine(host);
     const controls = h(`<div class="controls"></div>`);

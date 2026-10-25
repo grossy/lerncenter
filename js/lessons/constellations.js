@@ -1,7 +1,7 @@
 // Lesson (en, adults): Harmonic constellations – arpeggiated chords in C minor, nested progressions
 import { loopPlayer, voicingWidget, rootSwitchWidget, chordCardsWidget, arpEvents } from '../widgets.js';
 
-const RANGE = { from: 48, to: 84 }; // C3 – C6, room for the scattered arpeggios
+const RANGE = { from: 48, to: 84, pads: { root: 0, scale: [0, 2, 3, 5, 7, 8, 10], flat: true } }; // C3 – C6 · Pads: C minor
 const BPM = 96;
 
 const CHORDS = {

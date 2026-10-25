@@ -1,10 +1,10 @@
 // Lesson (en, adults): One vibe, two colours – A minor 11 → F major 9 ♯11 → deceptive cadence
 import { playNote, playChord } from '../audio.js';
-import { createPiano } from '../piano.js';
+import { createInstrument } from '../instrument.js';
 import { h } from '../lesson.js';
 import { nn, label, showChord, strum, bassLine, loopPlayer as sharedLoopPlayer, voicingWidget as sharedVoicing, chordCardsWidget } from '../widgets.js';
 
-const RANGE = { from: 48, to: 76 }; // C3 – E5
+const RANGE = { from: 48, to: 76, pads: { root: 9, scale: [0, 2, 3, 5, 7, 8, 10] } }; // C3 – E5 · Pads: A minor
 const BPM = 84;
 
 // Final voicings. bass = played by the bass, keys = played on the keyboard, pulse = the repeated note
@@ -34,7 +34,7 @@ const voicingWidget = (steps, opts) => sharedVoicing(steps, { ...opts, range: RA
 function stackWidget(host) {
   const timers = [];
   const notes = [57, 60, 64, 67, 71, 74];
-  const piano = createPiano({ ...RANGE, names: 'en', onKey: (m) => playNote(m) });
+  const piano = createInstrument({ ...RANGE, names: 'en', onKey: (m) => playNote(m) });
   host.appendChild(piano.el);
   host.appendChild(h(`<div class="controls"><button class="btn primary big go">▶ Stack thirds from A</button></div><div class="readout"></div>`));
   const readout = host.querySelector('.readout');
@@ -69,7 +69,7 @@ const FMAJ_STEPS = [
 /* ---------- Page 5: same notes, new root ---------- */
 function rootSwitchWidget(host) {
   const notes = [57, 60, 64, 67, 71, 74]; // A C E G B D
-  const piano = createPiano({ ...RANGE, names: 'en', onKey: (m) => playNote(m, { type: 'pad' }) });
+  const piano = createInstrument({ ...RANGE, names: 'en', onKey: (m) => playNote(m, { type: 'pad' }) });
   host.appendChild(piano.el);
   const setBass = bassLine(host);
   host.appendChild(h(`
@@ -97,7 +97,7 @@ function rootSwitchWidget(host) {
 /* ---------- Page 8: cadence ---------- */
 function cadenceWidget(host) {
   const timers = [];
-  const piano = createPiano({ ...RANGE, names: 'en', onKey: (m) => playNote(m, { type: 'pad' }) });
+  const piano = createInstrument({ ...RANGE, names: 'en', onKey: (m) => playNote(m, { type: 'pad' }) });
   host.appendChild(piano.el);
   const setBass = bassLine(host);
   host.appendChild(h(`
