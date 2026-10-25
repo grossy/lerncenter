@@ -81,6 +81,14 @@ mark { background: var(--accent-soft); color: inherit; padding: 0 .3em; border-r
 }
 .chip.selected { background: var(--accent); border-color: var(--accent); color: #fff; }
 
+/* ---------- Segmented toggle ---------- */
+.segmented { display: inline-flex; background: var(--surface-2); border-radius: 999px; padding: 3px; }
+.segmented button {
+  font: inherit; font-weight: 600; font-size: .9rem; border: 0; background: transparent; color: var(--muted);
+  border-radius: 999px; padding: .35em .9em; cursor: pointer;
+}
+.segmented button.selected { background: var(--accent); color: #fff; }
+
 /* ---------- Top / bottom bars ---------- */
 .topbar {
   position: fixed; top: 0; left: 0; right: 0; height: var(--topbar); z-index: 10;
@@ -171,6 +179,9 @@ mark { background: var(--accent-soft); color: inherit; padding: 0 .3em; border-r
   font-weight: 700; font-size: .95rem; transition: background .1s, border-color .1s;
 }
 .bar.active { border-color: var(--accent); background: var(--accent-soft); }
+.bars.eight { grid-template-columns: repeat(8, 1fr); }
+.bars.eight .bar { font-size: .8rem; padding: .5rem .25rem; }
+@media (max-width: 640px) { .bars.eight { grid-template-columns: repeat(4, 1fr); } }
 .bar.alt { border-style: dashed; }
 .steps { display: grid; grid-template-columns: repeat(16, 1fr); gap: 3px; margin-top: 1rem; }
 .step {

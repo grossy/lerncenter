@@ -1,47 +1,19 @@
 // Lesson (en, adults): One vibe, two colours – A minor 11 → F major 9 ♯11 → deceptive cadence
-import { playNote, playChord, createLoop } from '../audio.js';
-import { createPiano, noteName } from '../piano.js';
+import { playNote, playChord } from '../audio.js';
+import { createPiano } from '../piano.js';
 import { h } from '../lesson.js';
+import { nn, label, showChord, strum, bassLine, loopPlayer as sharedLoopPlayer, voicingWidget as sharedVoicing, chordCardsWidget } from '../widgets.js';
 
-const EN = { names: 'en' };
-const RANGE = { from: 48, to: 76, names: 'en' }; // C3 – E5
+const RANGE = { from: 48, to: 76 }; // C3 – E5
 const BPM = 84;
-const nn = (m, flat = false) => noteName(m, { names: 'en', flat });
-
-// Interval labels relative to a root, per chord quality
-const QUALITY = {
-  minor: { 0: 'R', 3: '♭3', 7: '5', 10: '♭7', 2: '9', 5: '11' },
-  major: { 0: 'R', 4: '3', 7: '5', 11: '7', 2: '9', 6: '♯11', 9: '13' },
-  alt:   { 0: 'R', 4: '3', 7: '5', 10: '♭7', 3: '♯9', 8: '♭13' },
-};
-const label = (root, midi, quality) => QUALITY[quality][((midi - root) % 12 + 12) % 12] ?? '';
 
 // Final voicings. bass = played by the bass, keys = played on the keyboard, pulse = the repeated note
 const CHORDS = {
   am11:  { name: 'A minor 11', short: 'Am11', root: 57, quality: 'minor', bass: 45, keys: [59, 60, 62, 64, 67], pulse: 59, cls: 'minor' },
-  fmaj9: { name: 'F major 9 ♯11', short: 'Fmaj9♯11', root: 53, quality: 'major', bass: 41, keys: [55, 57, 59, 60, 64], pulse: 59, cls: 'major' },
-  e7alt: { name: 'E7 ♯9 ♭13', short: 'E7♯9♭13', root: 52, quality: 'alt', bass: 40, keys: [56, 59, 60, 62, 67], pulse: 59, cls: 'root' },
+  fmaj9: { name: 'F major 9 ♯11', short: 'Fmaj9♯11', root: 53, quality: 'major', bass: 41, keys: [55, 57, 59, 60, 64], pulse: 59, cls: 'major', alt: true },
+  e7alt: { name: 'E7 ♯9 ♭13', short: 'E7♯9♭13', root: 52, quality: 'alt', bass: 40, keys: [56, 59, 60, 62, 67], pulse: 59, cls: 'root', alt: true },
 };
 const PULSE_STEPS = [0, 3, 6, 10, 13]; // beat 1, 4th 16th of 1, "and" of 2, "and" of 3, 16th after 4
-
-function showChord(piano, chord, { badges = true } = {}) {
-  piano.clear();
-  for (const m of chord.keys) {
-    piano.set(m, chord.cls);
-    if (badges) piano.badge(m, label(chord.root, m, chord.quality), chord.cls);
-  }
-}
-
-function strum(chord, { dur = 2.2 } = {}) {
-  playNote(chord.bass, { dur, vel: 0.5, type: 'bass' });
-  playChord(chord.keys, { dur, type: 'pad', vel: 0.28 });
-}
-
-function bassLine(host) {
-  const el = h(`<div class="bassline">Bass plays: <span class="note">–</span></div>`);
-  host.appendChild(el);
-  return (midi) => { el.querySelector('.note').textContent = midi ? nn(midi) : '–'; };
-}
 
 /** Events for one bar of a chord at bar index b (16 steps per bar) */
 function barEvents(chord, b, { pulse = true } = {}) {
@@ -54,77 +26,15 @@ function barEvents(chord, b, { pulse = true } = {}) {
   return ev;
 }
 
-/* ---------- Generic loop player: a list of 4 bars ---------- */
-function loopPlayer({ variants, pulse = true, showSteps = false }) {
-  return (host) => {
-    let variant = 0, loop = null;
-    const piano = createPiano({ ...RANGE, onKey: (m) => playNote(m, { type: 'pad' }) });
-    host.appendChild(piano.el);
-    const setBass = bassLine(host);
-    const barsEl = h(`<div class="bars"></div>`);
-    host.appendChild(barsEl);
-    let stepsEl = null;
-    if (showSteps) {
-      stepsEl = h(`<div class="steps"></div>`);
-      for (let i = 0; i < 16; i++) stepsEl.appendChild(h(`<div class="step${i % 4 === 0 ? ' beat' : ''}${pulse && PULSE_STEPS.includes(i) ? ' hit' : ''}"></div>`));
-      host.appendChild(stepsEl);
-      const labels = h(`<div class="steplabels"></div>`);
-      for (let i = 0; i < 16; i++) labels.appendChild(h(`<div>${i % 4 === 0 ? (i / 4 + 1) : i % 4 === 2 ? '&' : '·'}</div>`));
-      host.appendChild(labels);
-    }
-    const controls = h(`<div class="controls"><button class="btn primary big play">▶ Play loop</button><div class="chips variants"></div></div>`);
-    host.appendChild(controls);
-    const playBtn = controls.querySelector('.play');
-    const chipsEl = controls.querySelector('.variants');
-    if (variants.length > 1) {
-      variants.forEach((v, i) => {
-        const c = h(`<button class="chip${i === 0 ? ' selected' : ''}">${v.label}</button>`);
-        c.onclick = () => { variant = i; chipsEl.querySelectorAll('.chip').forEach((x, j) => x.classList.toggle('selected', j === i)); restart(); };
-        chipsEl.appendChild(c);
-      });
-    }
-
-    function renderBars() {
-      barsEl.innerHTML = '';
-      variants[variant].bars.forEach((key, i) => {
-        const c = CHORDS[key];
-        barsEl.appendChild(h(`<div class="bar${c !== CHORDS.am11 ? ' alt' : ''}" data-bar="${i}">${c.short}</div>`));
-      });
-    }
-    function highlight(bar) {
-      barsEl.querySelectorAll('.bar').forEach((b, i) => b.classList.toggle('active', i === bar));
-      const c = CHORDS[variants[variant].bars[bar]];
-      if (c) { showChord(piano, c); setBass(c.bass); } else { piano.clear(); setBass(null); }
-    }
-    function build() {
-      const bars = variants[variant].bars;
-      const events = bars.flatMap((key, b) => barEvents(CHORDS[key], b, { pulse }));
-      let lastBar = -1;
-      return createLoop({
-        bpm: BPM, steps: bars.length * 16, events,
-        onStep: (s) => {
-          if (s < 0) { highlight(-1); stepsEl?.querySelectorAll('.step').forEach((x) => x.classList.remove('now')); return; }
-          const bar = Math.floor(s / 16);
-          if (bar !== lastBar) { lastBar = bar; highlight(bar); }
-          stepsEl?.querySelectorAll('.step').forEach((x, i) => x.classList.toggle('now', i === s % 16));
-        },
-      });
-    }
-    function stop() { loop?.stop(); loop = null; playBtn.textContent = '▶ Play loop'; }
-    function start() { loop = build(); loop.start(); playBtn.textContent = '■ Stop'; }
-    function restart() { const was = !!loop; stop(); renderBars(); highlight(0); if (was) start(); }
-    playBtn.onclick = () => (loop ? stop() : start());
-    renderBars();
-    highlight(0);
-    return { destroy: stop };
-  };
-}
+const loopPlayer = ({ variants, pulse = true, showSteps = false }) =>
+  sharedLoopPlayer({ chords: CHORDS, range: RANGE, bpm: BPM, variants, showSteps, pulseSteps: pulse ? PULSE_STEPS : [], build: (c, b) => barEvents(c, b, { pulse }) });
+const voicingWidget = (steps, opts) => sharedVoicing(steps, { ...opts, range: RANGE });
 
 /* ---------- Page 2: stacking thirds ---------- */
 function stackWidget(host) {
   const timers = [];
   const notes = [57, 60, 64, 67, 71, 74];
-  const piano = createPiano({ ...RANGE, onKey: (m) => playNote(m) });
+  const piano = createPiano({ ...RANGE, names: 'en', onKey: (m) => playNote(m) });
   host.appendChild(piano.el);
   host.appendChild(h(`<div class="controls"><button class="btn primary big go">▶ Stack thirds from A</button></div><div class="readout"></div>`));
   const readout = host.querySelector('.readout');
@@ -140,46 +50,6 @@ function stackWidget(host) {
     timers.push(setTimeout(() => { readout.innerHTML = `A C E G B D = <strong>A minor 11</strong>`; playChord(notes, { dur: 2, type: 'pad', vel: 0.25 }); }, notes.length * 520 + 200));
   };
   return { destroy: () => timers.forEach(clearTimeout) };
-}
-
-/* ---------- Pages 3 & 6: voicing step by step ---------- */
-function voicingWidget(steps, { root, quality, cls }) {
-  return (host) => {
-    let i = 0;
-    const piano = createPiano({ ...RANGE, onKey: (m) => playNote(m, { type: 'pad' }) });
-    host.appendChild(piano.el);
-    const setBass = bassLine(host);
-    host.appendChild(h(`
-      <div class="controls">
-        <button class="btn ghost prev">←</button>
-        <button class="btn primary big next">Next step →</button>
-        <button class="btn hear">▶ Hear it</button>
-      </div>
-      <div class="readout"></div>`));
-    const readout = host.querySelector('.readout');
-    const prevBtn = host.querySelector('.prev');
-    const nextBtn = host.querySelector('.next');
-    function render(play = true) {
-      const st = steps[i];
-      piano.clear();
-      for (const m of st.keys) { piano.set(m, cls); piano.badge(m, label(st.root ?? root, m, st.quality ?? quality), cls); }
-      setBass(st.bass);
-      readout.innerHTML = `<span class="tag ${cls}">Step ${i + 1} / ${steps.length}</span> ${st.text}`;
-      prevBtn.disabled = i === 0;
-      nextBtn.disabled = i === steps.length - 1;
-      if (play) hear();
-    }
-    function hear() {
-      const st = steps[i];
-      if (st.bass) playNote(st.bass, { dur: 2, vel: 0.5, type: 'bass' });
-      playChord(st.keys, { dur: 2, type: 'pad', vel: 0.26 });
-    }
-    prevBtn.onclick = () => { i = Math.max(0, i - 1); render(); };
-    nextBtn.onclick = () => { i = Math.min(steps.length - 1, i + 1); render(); };
-    host.querySelector('.hear').onclick = hear;
-    render(false);
-    return {};
-  };
 }
 
 const AM11_STEPS = [
@@ -199,7 +69,7 @@ const FMAJ_STEPS = [
 /* ---------- Page 5: same notes, new root ---------- */
 function rootSwitchWidget(host) {
   const notes = [57, 60, 64, 67, 71, 74]; // A C E G B D
-  const piano = createPiano({ ...RANGE, onKey: (m) => playNote(m, { type: 'pad' }) });
+  const piano = createPiano({ ...RANGE, names: 'en', onKey: (m) => playNote(m, { type: 'pad' }) });
   host.appendChild(piano.el);
   const setBass = bassLine(host);
   host.appendChild(h(`
@@ -227,7 +97,7 @@ function rootSwitchWidget(host) {
 /* ---------- Page 8: cadence ---------- */
 function cadenceWidget(host) {
   const timers = [];
-  const piano = createPiano({ ...RANGE, onKey: (m) => playNote(m, { type: 'pad' }) });
+  const piano = createPiano({ ...RANGE, names: 'en', onKey: (m) => playNote(m, { type: 'pad' }) });
   host.appendChild(piano.el);
   const setBass = bassLine(host);
   host.appendChild(h(`
@@ -252,23 +122,7 @@ function cadenceWidget(host) {
   return { destroy: () => timers.forEach(clearTimeout) };
 }
 
-/* ---------- Page 10: summary ---------- */
-function summaryWidget(host) {
-  host.appendChild(h(`<div class="cards"></div>`));
-  const grid = host.querySelector('.cards');
-  for (const [key, c] of Object.entries(CHORDS)) {
-    const card = h(`
-      <div class="card">
-        <h4>${c.name}</h4>
-        <div class="sub">bass ${nn(c.bass)} · keys ${c.keys.map((m) => nn(m)).join(' ')}</div>
-        <div><span class="tag ${c.cls}">${{ am11: 'i – home', fmaj9: 'VI – the shift', e7alt: 'V – the setup' }[key]}</span></div>
-        <button class="btn">▶ Hear it</button>
-      </div>`);
-    card.querySelector('.btn').onclick = () => strum(c);
-    grid.appendChild(card);
-  }
-  return {};
-}
+const summaryWidget = chordCardsWidget(CHORDS, { am11: 'i – home', fmaj9: 'VI – the shift', e7alt: 'V – the setup' });
 
 export default {
   id: 'harmonic-shift',

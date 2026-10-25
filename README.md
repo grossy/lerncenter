@@ -6,6 +6,7 @@ Lektionen:
 
 - **Kleine und grosse Terzen** (Musik, Klasse 6, Deutsch)
 - **One Vibe, Two Colours** (Musik, Erwachsene, Englisch) – Am11 → Fmaj9♯11 und Trugschluss
+- **Harmonic Constellations** (Musik, Erwachsene, Englisch) – Arpeggiator, Voice Leading, verschachtelte Progression in c-Moll
 
 **Live:** <https://grossy.github.io/lerncenter/> (GitHub Pages, deployt automatisch bei jedem Push auf `main`).
 
@@ -27,13 +28,15 @@ Dann <http://localhost:5173> öffnen.
 - `js/audio.js` – kleiner Web-Audio-Synth (Klavier-ähnlich)
 - `js/piano.js` – Klaviatur-Komponente
 - `js/lessons/terzen.js` – Inhalt und Widgets der Terzen-Lektion
-- `js/lessons/harmonic-shift.js` – englische Erwachsenen-Lektion mit Loop-Sequencer
+- `js/widgets.js` – gemeinsame Akkord-Widgets (Loop-Player, Voicing-Schritte, Root-Wechsel, Arpeggiator)
+- `js/lessons/harmonic-shift.js`, `js/lessons/constellations.js` – englische Erwachsenen-Lektionen
 - `js/lessons/index.js` – Katalog aller Lektionen (Titel, Fach, Klassenstufe, Farbe, Loader)
 
 ## Klassenstufen
 
-Jede Lektion hat ein `grade`: `1`–`13` oder `'erwachsene'` (Konstante `ADULT`). Die Startseite filtert danach,
-der Lektions-Player zeigt die Stufe im Kopf an.
+Jede Lektion hat ein `grade`: `1`–`13` oder `'erwachsene'` (Konstante `ADULT`). Die Startseite hat oben einen
+Kinder/Erwachsene-Umschalter; im Kinder-Modus gibt es zusätzlich Dropdowns für Fach und Klasse. Der Lektions-Player
+zeigt die Stufe im Kopf an.
 
 Neue Lektion: Datei in `js/lessons/` anlegen (Default-Export mit `id`, `title`, `subject`, `grade`, optional `lang: 'en'`, `pages`),
 dann einen Eintrag im `catalog` in `js/lessons/index.js` ergänzen. Die Startseite rendert die Karten daraus.

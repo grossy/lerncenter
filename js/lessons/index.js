@@ -30,6 +30,17 @@ export const catalog = [
     available: true,
     load: () => import('./harmonic-shift.js'),
   },
+  {
+    id: 'constellations',
+    title: 'Harmonic Constellations',
+    subject: 'Musik',
+    grade: ADULT,
+    emoji: '✨',
+    color: 'c-adult',
+    description: 'Englisch · Arpeggiated chords in C minor, voice leading, and a progression nested inside one arpeggiated chord.',
+    available: true,
+    load: () => import('./constellations.js'),
+  },
 ];
 
 export const lessons = Object.fromEntries(catalog.filter((l) => l.load).map((l) => [l.id, l.load]));

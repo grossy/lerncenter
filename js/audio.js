@@ -16,6 +16,7 @@ const VOICES = {
   piano: { partials: [[1, 1, 'triangle'], [2, 0.3, 'sine'], [3, 0.1, 'sine']], cutoff: 2600, attack: 0.012, decay: 0.35, sustain: 0.45, release: 0.09 },
   pad:   { partials: [[1, 1, 'sine'], [2, 0.35, 'triangle'], [3, 0.12, 'sine'], [4, 0.05, 'sine']], cutoff: 1900, attack: 0.03, decay: 0.6, sustain: 0.7, release: 0.25 },
   synth: { partials: [[1, 0.6, 'sawtooth'], [1.004, 0.5, 'sawtooth'], [2, 0.15, 'square']], cutoff: 1400, attack: 0.005, decay: 0.12, sustain: 0.5, release: 0.05 },
+  pluck: { partials: [[1, 1, 'triangle'], [2, 0.4, 'sine'], [4, 0.08, 'sine']], cutoff: 3200, attack: 0.004, decay: 0.2, sustain: 0.25, release: 0.08 },
   bass:  { partials: [[1, 1, 'sine'], [2, 0.5, 'triangle'], [3, 0.1, 'sine']], cutoff: 700, attack: 0.01, decay: 0.4, sustain: 0.8, release: 0.12 },
 };
 
