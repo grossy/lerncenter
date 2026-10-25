@@ -84,12 +84,20 @@ export function playChord(midis, { time = 0, dur = 1.2, type = 'piano', vel = 0.
   return time + dur;
 }
 
-/** Terz/Intervall: erst nacheinander, dann zusammen – oder nur zusammen. */
+/** Terz/Intervall: erst nacheinander, dann zusammen – oder nur zusammen. Gibt {stop, duration} zurück. */
 export function playInterval(root, semis, { together = false, dur = 0.6 } = {}) {
-  if (together) return playChord([root, root + semis], { dur: 1.3 });
-  playNote(root, { time: 0, dur });
-  playNote(root + semis, { time: dur, dur });
-  return playChord([root, root + semis], { time: dur * 2 + 0.1, dur: 1.2 });
+  const handles = [];
+  let duration;
+  if (together) {
+    for (const m of [root, root + semis]) handles.push(playNote(m, { dur: 1.3, vel: 0.35 }));
+    duration = 1.3;
+  } else {
+    handles.push(playNote(root, { time: 0, dur }));
+    handles.push(playNote(root + semis, { time: dur, dur }));
+    for (const m of [root, root + semis]) handles.push(playNote(m, { time: dur * 2 + 0.1, dur: 1.2, vel: 0.35 }));
+    duration = dur * 2 + 1.3;
+  }
+  return { duration, stop: () => handles.forEach((h) => h.stop()) };
 }
 
 /**

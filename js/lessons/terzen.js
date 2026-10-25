@@ -7,7 +7,7 @@ const C4 = 60;
 const INTERVAL_NAMES = ['Prime (derselbe Ton)', 'kleine Sekunde', 'grosse Sekunde', 'kleine Terz', 'grosse Terz',
   'Quarte', 'Tritonus', 'Quinte', 'kleine Sexte', 'grosse Sexte', 'kleine Septime', 'grosse Septime', 'Oktave'];
 
-const timers = () => {
+const timersFor = () => {
   const list = [];
   return {
     after(ms, fn) { list.push(setTimeout(fn, ms)); },
@@ -17,7 +17,7 @@ const timers = () => {
 
 /* ---------- Seite 1: Was ist eine Terz? ---------- */
 function introWidget(host) {
-  const t = timers();
+  const t = timersFor();
   const piano = createPiano({ onKey: (m) => playNote(m) });
   host.appendChild(piano.el);
   piano.set(C4, 'root'); piano.badge(C4, '1', 'root');
@@ -41,7 +41,7 @@ function introWidget(host) {
 /* ---------- Seite 2/3: Halbtonschritte zählen ---------- */
 function countWidget(steps) {
   return (host) => {
-    const t = timers();
+    const t = timersFor();
     const cls = steps === 4 ? 'major' : 'minor';
     const piano = createPiano({ onKey: (m) => playNote(m) });
     host.appendChild(piano.el);
@@ -79,7 +79,7 @@ function countWidget(steps) {
 
 /* ---------- Seite 4: Vergleich hell/dunkel ---------- */
 function compareWidget(host) {
-  const t = timers();
+  const t = timersFor();
   let root = C4, together = false;
   const piano = createPiano({ onKey: (m) => playNote(m) });
   host.appendChild(piano.el);
@@ -188,16 +188,21 @@ function songsWidget(host) {
 /* ---------- Seite 7: Hör-Quiz ---------- */
 function quizWidget(host) {
   const ROUNDS = 8;
-  let round = 0, score = 0, current = null, hard = false, answered = false;
+  const LEVELS = {
+    leicht: { label: 'leicht: immer von C', fixedRoot: C4, together: false },
+    mittel: { label: 'mittel: wechselnder Grundton', fixedRoot: null, together: false },
+    schwer: { label: 'schwer: beide Töne zusammen', fixedRoot: null, together: true },
+  };
+  let level = 'leicht', round = 0, score = 0, current = null, answered = false, sound = null;
+  const timers = timersFor();
   host.classList.add('quiz');
   host.appendChild(h(`
     <div class="score"><span class="round"></span><span class="pts"></span></div>
+    <div class="chips levels"></div>
     <div class="controls">
       <button class="btn primary big play">▶ Abspielen</button>
-      <div class="chips">
-        <button class="chip selected" data-hard="0">leicht (nacheinander)</button>
-        <button class="chip" data-hard="1">schwer (zusammen)</button>
-      </div>
+      <button class="btn compare hidden">🔁 Beide hören</button>
+      <button class="btn primary next hidden">Nächste Frage →</button>
     </div>
     <div class="choices">
       <button class="btn big major" data-a="4">☀️ Gross</button>
@@ -211,60 +216,101 @@ function quizWidget(host) {
     </div>`));
   const $ = (s) => host.querySelector(s);
   const choices = host.querySelectorAll('.choices .btn');
+  const levelsEl = $('.levels');
+  for (const [key, l] of Object.entries(LEVELS)) {
+    const c = h(`<button class="chip${key === level ? ' selected' : ''}">${l.label}</button>`);
+    c.onclick = () => { level = key; levelsEl.querySelectorAll('.chip').forEach((x) => x.classList.toggle('selected', x === c)); };
+    levelsEl.appendChild(c);
+  }
 
-  host.querySelectorAll('.chips .chip').forEach((c) => {
-    c.onclick = () => { hard = c.dataset.hard === '1'; host.querySelectorAll('.chips .chip').forEach((x) => x.classList.toggle('selected', x === c)); };
-  });
+  function stopSound() { timers.clear(); sound?.stop(); sound = null; }
+  function playCurrent() {
+    stopSound();
+    sound = playInterval(current.root, current.semis, { together: LEVELS[level].together });
+  }
   function newRound() {
-    current = { root: 55 + Math.floor(Math.random() * 14), semis: Math.random() < 0.5 ? 3 : 4 };
+    const l = LEVELS[level];
+    current = { root: l.fixedRoot ?? 55 + Math.floor(Math.random() * 14), semis: Math.random() < 0.5 ? 3 : 4 };
     answered = false;
     $('.round').textContent = `Frage ${round + 1} von ${ROUNDS}`;
     $('.pts').textContent = `${score} richtig`;
     $('.readout').className = 'readout';
-    $('.readout').textContent = 'Drück auf Abspielen und hör gut hin.';
-    choices.forEach((b) => (b.disabled = false));
-    play();
+    $('.readout').textContent = 'Hör gut hin: gross oder klein?';
+    $('.play').textContent = '🔁 Nochmal hören';
+    $('.next').classList.add('hidden');
+    $('.compare').classList.add('hidden');
+    choices.forEach((b) => { b.disabled = false; b.classList.remove('ok', 'bad'); });
+    playCurrent();
   }
-  function play() { playInterval(current.root, current.semis, { together: hard }); }
   choices.forEach((b) => {
     b.onclick = () => {
-      if (answered) return;
+      if (!current || answered) return;
       answered = true;
       const ok = Number(b.dataset.a) === current.semis;
       if (ok) score++;
+      b.classList.add(ok ? 'ok' : 'bad');
       const r = $('.readout');
       r.className = 'readout ' + (ok ? 'ok' : 'bad');
-      r.textContent = ok ? '✅ Richtig!' : `❌ Das war eine ${current.semis === 4 ? 'grosse' : 'kleine'} Terz.`;
+      r.textContent = ok
+        ? `✅ Richtig, das war eine ${current.semis === 4 ? 'grosse' : 'kleine'} Terz.`
+        : `❌ Das war eine ${current.semis === 4 ? 'grosse' : 'kleine'} Terz. Hör dir beide zum Vergleich an.`;
       $('.pts').textContent = `${score} richtig`;
       choices.forEach((x) => (x.disabled = true));
       round++;
-      setTimeout(round < ROUNDS ? newRound : finish, 1300);
+      $('.next').textContent = round < ROUNDS ? 'Nächste Frage →' : 'Ergebnis →';
+      $('.next').classList.remove('hidden');
+      if (!ok) $('.compare').classList.remove('hidden');
     };
   });
+  // Spielt gross und klein vom selben Grundton nacheinander, damit man den Unterschied direkt hört.
+  $('.compare').onclick = () => {
+    stopSound();
+    const r = $('.readout');
+    r.className = 'readout';
+    r.innerHTML = '☀️ <strong>Grosse Terz</strong> …';
+    sound = playInterval(current.root, 4, { together: LEVELS[level].together });
+    const gap = sound.duration + 0.5;
+    timers.after(gap * 1000, () => {
+      r.innerHTML = '🌙 <strong>Kleine Terz</strong> …';
+      sound = playInterval(current.root, 3, { together: LEVELS[level].together });
+      timers.after((sound.duration + 0.3) * 1000, () => {
+        r.innerHTML = `Das Quiz-Beispiel war die <strong>${current.semis === 4 ? 'grosse' : 'kleine'}</strong> Terz.`;
+      });
+    });
+  };
+  $('.next').onclick = () => { stopSound(); round < ROUNDS ? newRound() : finish(); };
+  $('.play').onclick = () => (current ? playCurrent() : newRound());
   function finish() {
+    current = null;
     $('.choices').classList.add('hidden');
     $('.controls').classList.add('hidden');
+    $('.levels').classList.add('hidden');
     $('.readout').textContent = '';
-    const res = $('.result');
-    res.classList.remove('hidden');
+    $('.result').classList.remove('hidden');
     const stars = score >= 8 ? 3 : score >= 6 ? 2 : score >= 4 ? 1 : 0;
     $('.stars').textContent = '⭐'.repeat(stars) + '☆'.repeat(3 - stars);
     $('.msg').textContent = `${score} von ${ROUNDS} richtig! ` + (stars === 3 ? 'Perfekt, du hast Terzen-Ohren! 🎉' : stars >= 1 ? 'Super gemacht!' : 'Übung macht den Meister – nochmal?');
     if (stars >= 2) confetti();
   }
   $('.again').onclick = () => {
-    round = 0; score = 0;
+    round = 0; score = 0; current = null;
     $('.result').classList.add('hidden');
     $('.choices').classList.remove('hidden');
     $('.controls').classList.remove('hidden');
-    newRound();
+    $('.levels').classList.remove('hidden');
+    $('.play').textContent = '▶ Abspielen';
+    $('.next').classList.add('hidden');
+    $('.compare').classList.add('hidden');
+    choices.forEach((b) => { b.disabled = false; b.classList.remove('ok', 'bad'); });
+    $('.round').textContent = `Frage 1 von ${ROUNDS}`;
+    $('.pts').textContent = '0 richtig';
+    $('.readout').className = 'readout';
+    $('.readout').textContent = 'Drück auf Abspielen, dann rate: gross oder klein?';
   };
   $('.round').textContent = `Frage 1 von ${ROUNDS}`;
   $('.pts').textContent = '0 richtig';
   $('.readout').textContent = 'Drück auf Abspielen, dann rate: gross oder klein?';
-  // Erste Runde startet beim ersten Klick auf Abspielen (Browser braucht eine Geste für Audio).
-  $('.play').onclick = () => (current ? play() : newRound());
-  return {};
+  return { destroy: stopSound };
 }
 
 /* ---------- Seite 8: Zusammenfassung ---------- */
@@ -343,8 +389,11 @@ export default {
     {
       title: 'Hör-Quiz',
       widget: quizWidget,
-      body: `<p>Jetzt bist du dran! Du hörst eine Terz. Ist sie <strong>gross</strong> ☀️ oder <strong>klein</strong> 🌙?</p>`,
-      tryThis: `<p>Tipp: Stell dir vor, wie der Anfang von «Oh When the Saints» klingt (gross) – oder vom «Kuckuck» (klein).</p>`,
+      body: `<p>Jetzt bist du dran! Du hörst eine Terz. Ist sie <strong>gross</strong> ☀️ oder <strong>klein</strong> 🌙?</p>
+        <p>Auf <strong>leicht</strong> beginnt jede Terz auf C, so wie auf den Seiten davor. Auf <strong>mittel</strong> wechselt der
+        Grundton, da musst du genauer hinhören. Auf <strong>schwer</strong> erklingen beide Töne gleichzeitig.</p>`,
+      tryThis: `<p>Tipp: Stell dir vor, wie der Anfang von «Oh When the Saints» klingt (gross) – oder vom «Kuckuck» (klein).
+        Wenn du danebenliegst, drück auf <mark>Beide hören</mark>: Dann kommen gross und klein direkt hintereinander.</p>`,
     },
     {
       title: 'Geschafft! 🎉',
