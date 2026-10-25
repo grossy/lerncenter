@@ -2,7 +2,10 @@
 
 Proof of Concept für eine Lern-Webapp für Kinder, inspiriert von [Ableton Learn](https://learn.ableton.com/).
 
-Erste Lektion: **Musik – Kleine und grosse Terzen**.
+Lektionen:
+
+- **Kleine und grosse Terzen** (Musik, Klasse 6, Deutsch)
+- **One Vibe, Two Colours** (Musik, Erwachsene, Englisch) – Am11 → Fmaj9♯11 und Trugschluss
 
 **Live:** <https://grossy.github.io/lerncenter/> (GitHub Pages, deployt automatisch bei jedem Push auf `main`).
 
@@ -24,6 +27,7 @@ Dann <http://localhost:5173> öffnen.
 - `js/audio.js` – kleiner Web-Audio-Synth (Klavier-ähnlich)
 - `js/piano.js` – Klaviatur-Komponente
 - `js/lessons/terzen.js` – Inhalt und Widgets der Terzen-Lektion
+- `js/lessons/harmonic-shift.js` – englische Erwachsenen-Lektion mit Loop-Sequencer
 - `js/lessons/index.js` – Katalog aller Lektionen (Titel, Fach, Klassenstufe, Farbe, Loader)
 
 ## Klassenstufen
@@ -31,5 +35,5 @@ Dann <http://localhost:5173> öffnen.
 Jede Lektion hat ein `grade`: `1`–`13` oder `'erwachsene'` (Konstante `ADULT`). Die Startseite filtert danach,
 der Lektions-Player zeigt die Stufe im Kopf an.
 
-Neue Lektion: Datei in `js/lessons/` anlegen (Default-Export mit `id`, `title`, `subject`, `grade`, `pages`),
+Neue Lektion: Datei in `js/lessons/` anlegen (Default-Export mit `id`, `title`, `subject`, `grade`, optional `lang: 'en'`, `pages`),
 dann einen Eintrag im `catalog` in `js/lessons/index.js` ergänzen. Die Startseite rendert die Karten daraus.

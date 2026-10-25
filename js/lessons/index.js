@@ -19,6 +19,17 @@ export const catalog = [
     available: true,
     load: () => import('./terzen.js'),
   },
+  {
+    id: 'harmonic-shift',
+    title: 'One Vibe, Two Colours',
+    subject: 'Musik',
+    grade: ADULT,
+    emoji: '🎹',
+    color: 'c-adult',
+    description: 'Englisch · Am11 to Fmaj9♯11: shift the colour of a chord without changing the chord, plus a deceptive cadence.',
+    available: true,
+    load: () => import('./harmonic-shift.js'),
+  },
 ];
 
 export const lessons = Object.fromEntries(catalog.filter((l) => l.load).map((l) => [l.id, l.load]));

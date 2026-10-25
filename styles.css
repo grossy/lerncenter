@@ -157,6 +157,30 @@ mark { background: var(--accent-soft); color: inherit; padding: 0 .3em; border-r
 .legend { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: .9rem; font-size: .9rem; color: var(--muted); }
 .legend span::before { content: ""; display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: .4em; vertical-align: -1px; background: var(--c); }
 
+@media (max-width: 640px) {
+  .piano.wide .black .lbl { display: none; }
+  .piano.wide .white { font-size: .75rem; }
+}
+.bassline { display: flex; align-items: center; gap: .75rem; margin-top: .75rem; color: var(--muted); font-weight: 600; }
+.bassline .note { background: var(--text); color: var(--bg); border-radius: 8px; padding: .15em .6em; }
+
+/* ---------- Bars / step grid ---------- */
+.bars { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; margin-top: 1rem; }
+.bar {
+  border: 2px solid var(--border); border-radius: 10px; padding: .6rem .5rem; text-align: center;
+  font-weight: 700; font-size: .95rem; transition: background .1s, border-color .1s;
+}
+.bar.active { border-color: var(--accent); background: var(--accent-soft); }
+.bar.alt { border-style: dashed; }
+.steps { display: grid; grid-template-columns: repeat(16, 1fr); gap: 3px; margin-top: 1rem; }
+.step {
+  aspect-ratio: 1; border-radius: 4px; background: var(--surface-2); border: 1px solid var(--border);
+}
+.step.beat { border-color: var(--muted); }
+.step.hit { background: var(--accent); border-color: var(--accent); }
+.step.now { outline: 2px solid var(--major); outline-offset: 1px; }
+.steplabels { display: grid; grid-template-columns: repeat(16, 1fr); gap: 3px; font-size: .7rem; color: var(--muted); text-align: center; margin-top: 2px; }
+
 /* ---------- Cards (songs, summary) ---------- */
 .cards { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
 .card {
@@ -208,6 +232,7 @@ mark { background: var(--accent-soft); color: inherit; padding: 0 .3em; border-r
 .course.soon { opacity: .6; }
 .course.soon .btn { background: transparent; border-color: #111; color: #111; }
 .c-music { background: #c9b8ff; }
+.c-adult { background: #b8e0ff; }
 .filter { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-bottom: 1.5rem; }
 .filter { gap: 1rem; }
 .filter .select { display: flex; align-items: center; gap: .5rem; }

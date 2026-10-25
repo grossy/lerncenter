@@ -1,4 +1,4 @@
-// Kleiner Web-Audio-Synth, klingt grob nach Klavier/E-Piano.
+// Kleiner Web-Audio-Synth mit ein paar Klangfarben plus Loop-Sequencer.
 let ctx = null;
 
 export function getCtx() {
@@ -11,50 +11,75 @@ export function midiToFreq(m) {
   return 440 * Math.pow(2, (m - 69) / 12);
 }
 
-/** Spielt einen Ton. time = Verzögerung in Sekunden, dur = Länge. Gibt die Endzeit (relativ) zurück. */
-export function playNote(midi, { time = 0, dur = 0.8, vel = 0.45 } = {}) {
+// Klangfarben: Teiltöne [ratio, gain, type], Filter, Hüllkurve
+const VOICES = {
+  piano: { partials: [[1, 1, 'triangle'], [2, 0.3, 'sine'], [3, 0.1, 'sine']], cutoff: 2600, attack: 0.012, decay: 0.35, sustain: 0.45, release: 0.09 },
+  pad:   { partials: [[1, 1, 'sine'], [2, 0.35, 'triangle'], [3, 0.12, 'sine'], [4, 0.05, 'sine']], cutoff: 1900, attack: 0.03, decay: 0.6, sustain: 0.7, release: 0.25 },
+  synth: { partials: [[1, 0.6, 'sawtooth'], [1.004, 0.5, 'sawtooth'], [2, 0.15, 'square']], cutoff: 1400, attack: 0.005, decay: 0.12, sustain: 0.5, release: 0.05 },
+  bass:  { partials: [[1, 1, 'sine'], [2, 0.5, 'triangle'], [3, 0.1, 'sine']], cutoff: 700, attack: 0.01, decay: 0.4, sustain: 0.8, release: 0.12 },
+};
+
+/**
+ * Spielt einen Ton. time = Verzögerung in Sekunden, dur = Länge (bis Release).
+ * Gibt ein Handle mit stop() zurück.
+ */
+export function playNote(midi, { time = 0, dur = 0.8, vel = 0.45, type = 'piano' } = {}) {
   const ac = getCtx();
-  const t = ac.currentTime + time;
+  const v = VOICES[type] || VOICES.piano;
+  const t = ac.currentTime + Math.max(0, time);
   const out = ac.createGain();
   out.gain.value = 0;
   const lp = ac.createBiquadFilter();
   lp.type = 'lowpass';
-  lp.frequency.value = 2600;
+  lp.frequency.value = v.cutoff;
   out.connect(lp).connect(ac.destination);
 
   const f = midiToFreq(midi);
-  const partials = [[1, 1, 'triangle'], [2, 0.3, 'sine'], [3, 0.1, 'sine']];
-  for (const [ratio, gain, type] of partials) {
+  const oscs = [];
+  for (const [ratio, gain, kind] of v.partials) {
     const o = ac.createOscillator();
-    o.type = type;
+    o.type = kind;
     o.frequency.value = f * ratio;
     const g = ac.createGain();
     g.gain.value = gain;
     o.connect(g).connect(out);
     o.start(t);
-    o.stop(t + dur + 0.6);
+    o.stop(t + dur + v.release * 6 + 0.1);
+    oscs.push(o);
   }
   out.gain.setValueAtTime(0, t);
-  out.gain.linearRampToValueAtTime(vel, t + 0.012);
-  out.gain.exponentialRampToValueAtTime(vel * 0.45, t + 0.35);
-  out.gain.setTargetAtTime(0.0001, t + dur, 0.09);
-  return time + dur;
+  out.gain.linearRampToValueAtTime(vel, t + v.attack);
+  out.gain.exponentialRampToValueAtTime(Math.max(0.0001, vel * v.sustain), t + v.attack + v.decay);
+  out.gain.setTargetAtTime(0.0001, t + dur, v.release);
+  const end = t + dur + v.release * 6;
+  return {
+    end,
+    done: () => ac.currentTime > end,
+    stop(fade = 0.08) {
+      const now = ac.currentTime;
+      if (now > end) return;
+      out.gain.cancelScheduledValues(now);
+      out.gain.setValueAtTime(out.gain.value, now);
+      out.gain.linearRampToValueAtTime(0.0001, now + fade);
+      oscs.forEach((o) => { try { o.stop(now + fade + 0.02); } catch {} });
+    },
+  };
 }
 
 /** notes: Array aus midi oder {midi, dur}. Spielt nacheinander, gibt Gesamtdauer zurück. */
-export function playSequence(notes, { dur = 0.55, gap = 0 } = {}) {
+export function playSequence(notes, { dur = 0.55, gap = 0, type = 'piano' } = {}) {
   let t = 0;
   for (const n of notes) {
     const midi = typeof n === 'number' ? n : n.midi;
     const d = typeof n === 'number' ? dur : (n.dur ?? dur);
-    playNote(midi, { time: t, dur: d });
+    playNote(midi, { time: t, dur: d, type });
     t += d + gap;
   }
   return t;
 }
 
-export function playChord(midis, { time = 0, dur = 1.2 } = {}) {
-  for (const m of midis) playNote(m, { time, dur, vel: 0.35 });
+export function playChord(midis, { time = 0, dur = 1.2, type = 'piano', vel = 0.35 } = {}) {
+  for (const m of midis) playNote(m, { time, dur, vel, type });
   return time + dur;
 }
 
@@ -64,4 +89,56 @@ export function playInterval(root, semis, { together = false, dur = 0.6 } = {}) 
   playNote(root, { time: 0, dur });
   playNote(root + semis, { time: dur, dur });
   return playChord([root, root + semis], { time: dur * 2 + 0.1, dur: 1.2 });
+}
+
+/**
+ * Loop-Sequencer in 16tel-Schritten.
+ * events: [{ step, notes: [midi], dur (in Schritten), vel, type }]
+ * onStep(s) wird pro 16tel aufgerufen (s = -1 beim Stoppen).
+ */
+export function createLoop({ bpm = 84, steps = 64, events = [], onStep = null }) {
+  let running = false;
+  let handles = [];
+  let timers = [];
+  const stepSec = () => 60 / bpm / 4;
+
+  function scheduleIteration(t0) {
+    const ac = getCtx();
+    const sp = stepSec();
+    for (const e of events) {
+      const at = t0 + e.step * sp;
+      for (const m of e.notes) {
+        handles.push(playNote(m, { time: at - ac.currentTime, dur: e.dur * sp, vel: e.vel ?? 0.35, type: e.type || 'piano' }));
+      }
+    }
+    if (onStep) {
+      for (let s = 0; s < steps; s++) {
+        const delay = (t0 + s * sp - ac.currentTime) * 1000;
+        timers.push(setTimeout(() => running && onStep(s), Math.max(0, delay)));
+      }
+    }
+    const loopEnd = t0 + steps * sp;
+    timers.push(setTimeout(() => {
+      if (!running) return;
+      handles = handles.filter((h) => !h.done());
+      scheduleIteration(loopEnd);
+    }, Math.max(0, (loopEnd - ac.currentTime - 0.3) * 1000)));
+  }
+
+  return {
+    get running() { return running; },
+    start() {
+      if (running) return;
+      running = true;
+      scheduleIteration(getCtx().currentTime + 0.08);
+    },
+    stop() {
+      running = false;
+      timers.forEach(clearTimeout);
+      timers = [];
+      handles.forEach((h) => h.stop());
+      handles = [];
+      onStep && onStep(-1);
+    },
+  };
 }

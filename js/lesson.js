@@ -2,9 +2,16 @@
 import { initTheme, toggleTheme } from './theme.js';
 import { gradeLabel } from './lessons/index.js';
 
+const STRINGS = {
+  de: { page: (n, t) => `Seite ${n} von ${t}`, back: '← Zurück', next: 'Weiter →', overview: 'Zur Übersicht', close: 'Zur Übersicht', tryThis: '👉 Probier das', theme: 'Hell / Dunkel' },
+  en: { page: (n, t) => `Page ${n} of ${t}`, back: '← Back', next: 'Continue →', overview: 'Back to overview', close: 'Back to overview', tryThis: '👉 Try this', theme: 'Light / Dark' },
+};
+
 export function mountLesson(lesson) {
   initTheme();
   const app = document.getElementById('app');
+  const t = STRINGS[lesson.lang] || STRINGS.de;
+  document.documentElement.lang = lesson.lang || 'de';
   document.title = `${lesson.title} | Lerncenter`;
   const total = lesson.pages.length;
   let idx = parsePage();
@@ -27,23 +34,23 @@ export function mountLesson(lesson) {
     const last = idx === total - 1;
     app.innerHTML = `
       <header class="topbar">
-        <a class="iconbtn close" href="index.html" aria-label="Zur Übersicht">✕</a>
+        <a class="iconbtn close" href="index.html" aria-label="${t.close}">✕</a>
         <div class="topbar-title">${lesson.title}${lesson.grade ? ` <span class="tag grade">${gradeLabel(lesson.grade)}</span>` : ''}</div>
-        <button class="iconbtn theme" aria-label="Hell / Dunkel">◐</button>
+        <button class="iconbtn theme" aria-label="${t.theme}">◐</button>
       </header>
       <main class="lesson">
-        <div class="page-meta">Seite ${idx + 1} von ${total}</div>
+        <div class="page-meta">${t.page(idx + 1, total)}</div>
         <h1>${page.title}</h1>
         <section class="widget"></section>
         ${page.body ? `<div class="body">${page.body}</div>` : ''}
-        ${page.tryThis ? `<aside class="try"><h3>👉 Probier das</h3>${page.tryThis}</aside>` : ''}
+        ${page.tryThis ? `<aside class="try"><h3>${t.tryThis}</h3>${page.tryThis}</aside>` : ''}
       </main>
       <footer class="bottombar"><div class="inner">
-        <button class="btn ghost prev" ${idx === 0 ? 'disabled' : ''}>← Zurück</button>
+        <button class="btn ghost prev" ${idx === 0 ? 'disabled' : ''}>${t.back}</button>
         <div class="progress"><div class="bar" style="width:${((idx + 1) / total) * 100}%"></div></div>
         ${last
-          ? `<a class="btn primary next" href="index.html">Zur Übersicht</a>`
-          : `<button class="btn primary next">Weiter →</button>`}
+          ? `<a class="btn primary next" href="index.html">${t.overview}</a>`
+          : `<button class="btn primary next">${t.next}</button>`}
       </div></footer>`;
     app.querySelector('.theme').onclick = toggleTheme;
     app.querySelector('.prev').onclick = () => go(idx - 1);

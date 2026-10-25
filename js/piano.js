@@ -2,13 +2,20 @@
 const WHITE = [0, 2, 4, 5, 7, 9, 11];
 export const SHARP = ['C', 'Cis', 'D', 'Dis', 'E', 'F', 'Fis', 'G', 'Gis', 'A', 'B', 'H'];
 export const FLAT  = ['C', 'Des', 'D', 'Es', 'E', 'F', 'Ges', 'G', 'As', 'A', 'B', 'H'];
+export const SHARP_EN = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+export const FLAT_EN  = ['C', 'D♭', 'D', 'E♭', 'E', 'F', 'G♭', 'G', 'A♭', 'A', 'B♭', 'B'];
 
 export function isBlack(midi) { return !WHITE.includes(midi % 12); }
-export function noteName(midi, { flat = false } = {}) { return (flat ? FLAT : SHARP)[midi % 12]; }
+export function noteName(midi, { flat = false, names = 'de' } = {}) {
+  const table = names === 'en' ? (flat ? FLAT_EN : SHARP_EN) : (flat ? FLAT : SHARP);
+  return table[midi % 12];
+}
 
-export function createPiano({ from = 60, to = 76, onKey = null, labels = true } = {}) {
+export function createPiano({ from = 60, to = 76, onKey = null, labels = true, names = 'de' } = {}) {
   const el = document.createElement('div');
   el.className = 'piano';
+  const sharp = names === 'en' ? SHARP_EN : SHARP;
+  const flat = names === 'en' ? FLAT_EN : FLAT;
   const keys = new Map();
   let whites = 0;
   for (let m = from; m <= to; m++) {
@@ -21,7 +28,7 @@ export function createPiano({ from = 60, to = 76, onKey = null, labels = true } 
     if (labels) {
       const l = document.createElement('span');
       l.className = 'lbl';
-      l.innerHTML = black ? `${SHARP[m % 12]}<br>${FLAT[m % 12]}` : SHARP[m % 12];
+      l.innerHTML = black ? `${sharp[m % 12]}<br>${flat[m % 12]}` : sharp[m % 12];
       k.appendChild(l);
     }
     k.addEventListener('pointerdown', (e) => {
@@ -34,6 +41,7 @@ export function createPiano({ from = 60, to = 76, onKey = null, labels = true } 
     keys.set(m, k);
   }
   el.style.setProperty('--n', whites);
+  if (whites > 12) el.classList.add('wide');
 
   const api = {
     el,
