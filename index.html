@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lerncenter</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    try { var t = localStorage.getItem('lerncenter-theme'); } catch (e) {}
+    document.documentElement.dataset.theme = t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-title" style="padding-left:.5rem">🎓 Lerncenter</div>
+    <button class="iconbtn theme" aria-label="Hell / Dunkel">◐</button>
+  </header>
+  <main class="home">
+    <section class="hero">
+      <h1>Lerncenter</h1>
+      <p>Lerne spielerisch – direkt im Browser. Hören, ausprobieren, verstehen.</p>
+    </section>
+    <section class="filter" id="filter"></section>
+    <section class="courses" id="courses"></section>
+  </main>
+  <script type="module">
+    import { toggleTheme } from './js/theme.js';
+    import { catalog, GRADES, gradeLabel } from './js/lessons/index.js';
+    document.querySelector('.theme').onclick = toggleTheme;
+
+    const KEY = 'lerncenter-grade';
+    let filter = 'alle';
+    try { filter = localStorage.getItem(KEY) || 'alle'; } catch {}
+
+    const filterEl = document.getElementById('filter');
+    const coursesEl = document.getElementById('courses');
+
+    function renderFilter() {
+      filterEl.innerHTML = '<span class="label">Klasse:</span>';
+      const options = ['alle', ...GRADES];
+      for (const g of options) {
+        const count = g === 'alle' ? catalog.length : catalog.filter((l) => l.grade === g).length;
+        const b = document.createElement('button');
+        b.className = 'chip' + (String(g) === String(filter) ? ' selected' : '') + (count === 0 ? ' empty' : '');
+        b.textContent = g === 'alle' ? 'Alle' : gradeLabel(g, { short: true });
+        b.title = g === 'alle' ? 'Alle Lektionen' : gradeLabel(g) + (count === 0 ? ' – noch keine Lektionen' : '');
+        b.onclick = () => { filter = String(g); try { localStorage.setItem(KEY, filter); } catch {} renderFilter(); renderCourses(); };
+        filterEl.appendChild(b);
+      }
+    }
+
+    function renderCourses() {
+      const list = catalog.filter((l) => filter === 'alle' || String(l.grade) === filter);
+      coursesEl.innerHTML = '';
+      if (!list.length) {
+        coursesEl.innerHTML = '<p class="empty-state">Für diese Stufe gibt es noch keine Lektionen.</p>';
+        return;
+      }
+      for (const l of list) {
+        const el = document.createElement(l.available ? 'a' : 'div');
+        el.className = `course ${l.color}${l.available ? '' : ' soon'}`;
+        if (l.available) el.href = `lesson.html?id=${l.id}`;
+        el.innerHTML = `
+          <div class="art">${l.emoji}</div>
+          <span class="tag grade">${gradeLabel(l.grade)}</span>
+          <div class="meta">${l.subject}</div>
+          <h2>${l.title}</h2>
+          <p>${l.description}</p>
+          <span class="btn${l.available ? '' : ' ghost'}">${l.available ? 'Start →' : 'Bald…'}</span>`;
+        coursesEl.appendChild(el);
+      }
+    }
+    renderFilter();
+    renderCourses();
+  </script>
+</body>
+</html>

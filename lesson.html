@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lektion | Lerncenter</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    // Theme vor dem Rendern setzen (kein Flackern)
+    try { var t = localStorage.getItem('lerncenter-theme'); } catch (e) {}
+    document.documentElement.dataset.theme = t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="module">
+    import { lessons } from './js/lessons/index.js';
+    import { mountLesson } from './js/lesson.js';
+    const id = new URLSearchParams(location.search).get('id') || 'terzen';
+    const load = lessons[id];
+    if (!load) {
+      document.getElementById('app').innerHTML = '<main class="lesson"><h1>Lektion nicht gefunden</h1><p><a href="index.html">Zur Übersicht</a></p></main>';
+    } else {
+      load().then((m) => mountLesson(m.default));
+    }
+  </script>
+</body>
+</html>
