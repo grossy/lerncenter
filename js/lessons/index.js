@@ -20,6 +20,17 @@ export const catalog = [
     load: () => import('./terzen.js'),
   },
   {
+    id: 'europa',
+    title: 'Europa: Länder und Hauptstädte',
+    subject: 'Geografie',
+    grade: 6,
+    emoji: '🗺️',
+    color: 'c-geo',
+    description: 'Alle Länder Europas mit Hauptstädten auf einer Karte: erkunden, Regionen, Nachbarn, zwei Quiz und Lernkarten.',
+    available: true,
+    load: () => import('./europa.js'),
+  },
+  {
     id: 'harmonic-shift',
     title: 'One Vibe, Two Colours',
     subject: 'Musik',

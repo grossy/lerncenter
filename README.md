@@ -5,6 +5,7 @@ Proof of Concept für eine Lern-Webapp für Kinder, inspiriert von [Ableton Lear
 Lektionen:
 
 - **Kleine und grosse Terzen** (Musik, Klasse 6, Deutsch)
+- **Europa: Länder und Hauptstädte** (Geografie, Klasse 6, Deutsch) – klickbare Karte, Regionen, zwei Quiz, Lernkarten
 - **One Vibe, Two Colours** (Musik, Erwachsene, Englisch) – Am11 → Fmaj9♯11 und Trugschluss
 - **Harmonic Constellations** (Musik, Erwachsene, Englisch) – Arpeggiator, Voice Leading, verschachtelte Progression in c-Moll
 
@@ -28,6 +29,7 @@ Dann <http://localhost:5173> öffnen.
 - `js/audio.js` – kleiner Web-Audio-Synth (Klavier-ähnlich)
 - `js/piano.js` – Klaviatur-Komponente
 - `js/lessons/terzen.js` – Inhalt und Widgets der Terzen-Lektion
+- `js/map.js` – klickbare Europakarte (SVG), `js/data/europe-map.js` – vorberechnete Länderumrisse
 - `js/widgets.js` – gemeinsame Akkord-Widgets (Loop-Player, Voicing-Schritte, Root-Wechsel, Arpeggiator)
 - `js/lessons/harmonic-shift.js`, `js/lessons/constellations.js` – englische Erwachsenen-Lektionen
 - `js/lessons/index.js` – Katalog aller Lektionen (Titel, Fach, Klassenstufe, Farbe, Loader)
@@ -40,3 +42,9 @@ zeigt die Stufe im Kopf an.
 
 Neue Lektion: Datei in `js/lessons/` anlegen (Default-Export mit `id`, `title`, `subject`, `grade`, optional `lang: 'en'`, `pages`),
 dann einen Eintrag im `catalog` in `js/lessons/index.js` ergänzen. Die Startseite rendert die Karten daraus.
+
+## Kartendaten
+
+`js/data/europe-map.js` ist aus [world-atlas](https://github.com/topojson/world-atlas) (Natural Earth, gemeinfrei) generiert:
+TopoJSON dekodiert, mit einer Lambert-Azimutalprojektion (Zentrum 52° N, 10° O) in SVG-Koordinaten gebracht und vereinfacht.
+Generator: `tools/build_map.py <countries-50m.json> js/data/europe-map.js`. Die Projektion ist in `js/map.js` (`project`) nachgebaut, damit Hauptstädte als Pins platziert werden können.

@@ -244,6 +244,7 @@ mark { background: var(--accent-soft); color: inherit; padding: 0 .3em; border-r
 .course.soon .btn { background: transparent; border-color: #111; color: #111; }
 .c-music { background: #c9b8ff; }
 .c-adult { background: #b8e0ff; }
+.c-geo { background: #a8e6cf; }
 .filter { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-bottom: 1.5rem; }
 .filter { gap: 1rem; }
 .filter .select { display: flex; align-items: center; gap: .5rem; }
@@ -260,3 +261,46 @@ mark { background: var(--accent-soft); color: inherit; padding: 0 .3em; border-r
 
 /* Buttons auf Karten sollen sich vom Kartenhintergrund abheben */
 .card .btn { background: var(--surface); border-color: var(--border); }
+
+/* ---------- Map ---------- */
+:root { --sea: #d6e6f5; --land: #ece8dc; --land-context: #dcdad3; --hl-dim: .35; }
+:root[data-theme="dark"] { --sea: #0f1a28; --land: #3b3b3b; --land-context: #262626; }
+.map { border-radius: 12px; overflow: hidden; background: var(--sea); }
+.map svg { display: block; width: 100%; height: auto; }
+.map .context path { fill: var(--land-context); stroke: var(--sea); stroke-width: .6; }
+.map .country { fill: var(--land); stroke: var(--sea); stroke-width: .8; transition: fill .15s, opacity .15s; }
+.map.interactive .country { cursor: pointer; }
+.map.interactive .country:hover { fill: var(--accent-soft); }
+.map .country.dot { stroke: var(--bg); stroke-width: 1.5; }
+.map .country.hl, .map.interactive .country.hl:hover { fill: var(--accent); }
+.map .country.ok { fill: var(--ok); }
+.map .country.bad { fill: var(--bad); }
+.map .country.dim { opacity: var(--hl-dim); }
+.map .pin circle { fill: var(--text); stroke: var(--bg); }
+.map .pin.capital circle { fill: var(--major); }
+.map .pin text { font-family: var(--font); font-weight: 700; fill: var(--text); paint-order: stroke; stroke: var(--bg); stroke-linejoin: round; }
+.widget.quiz .map svg { max-height: 340px; }
+.r-nord { --rc: #7cc5f2; } .r-west { --rc: #f7a8c4; } .r-mitte { --rc: #ffd166; } .r-sued { --rc: #ff9f6e; } .r-suedost { --rc: #b8a2ee; } .r-ost { --rc: #8fdbb0; }
+.map .country.r-nord, .map .country.r-west, .map .country.r-mitte, .map .country.r-sued, .map .country.r-suedost, .map .country.r-ost { fill: var(--rc); }
+.chip.r-nord, .chip.r-west, .chip.r-mitte, .chip.r-sued, .chip.r-suedost, .chip.r-ost { border-color: var(--rc); }
+.chip.selected.r-nord, .chip.selected.r-west, .chip.selected.r-mitte, .chip.selected.r-sued, .chip.selected.r-suedost, .chip.selected.r-ost { background: var(--rc); border-color: var(--rc); color: #111; }
+.swatch { display: inline-block; width: 14px; height: 14px; border-radius: 4px; background: var(--rc); margin-right: .5em; vertical-align: -2px; }
+.regions, .widget .chips { margin-top: 1rem; }
+.info { display: flex; align-items: center; gap: 1rem; margin-top: 1rem; }
+.info-flag { font-size: 2.6rem; line-height: 1; }
+.info-name { font-weight: 700; font-size: 1.2rem; }
+.info-sub { color: var(--muted); }
+.fact { margin-top: 1rem; }
+.fact-title { font-weight: 700; font-size: 1.15rem; margin-bottom: .25em; }
+.quiz .question { font-size: 1.15rem; margin-top: 1rem; }
+.quiz .choices.grid { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+.quiz .choices.grid .btn { font-size: 1.05rem; padding: .8em 1em; }
+.btn.ok { background: var(--ok); color: #fff; opacity: 1 !important; }
+.btn.bad { background: var(--bad); color: #fff; opacity: 1 !important; }
+.btn.ok-btn { background: var(--ok); color: #fff; }
+.btn.bad-btn { background: var(--bad); color: #fff; }
+.flash { margin-top: 1rem; background: var(--surface-2); border-radius: 12px; padding: 1.25rem; text-align: center; min-height: 5.5rem; }
+.flash-front { font-size: 1.5rem; font-weight: 700; }
+.flash-back { font-size: 1.4rem; color: var(--accent); font-weight: 700; margin-top: .25em; min-height: 1.4em; }
+ul.plain { list-style: none; margin: 0; padding: 0; font-size: .95rem; }
+ul.plain li { padding: .15em 0; }
