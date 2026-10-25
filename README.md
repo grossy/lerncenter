@@ -4,6 +4,8 @@ Proof of Concept für eine Lern-Webapp für Kinder, inspiriert von [Ableton Lear
 
 Erste Lektion: **Musik – Kleine und grosse Terzen**.
 
+**Live:** <https://grossy.github.io/lerncenter/> (GitHub Pages, deployt automatisch bei jedem Push auf `main`).
+
 ## Starten
 
 Kein Build-Schritt nötig, nur ein statischer Webserver (ES-Module brauchen `http://`, nicht `file://`):
