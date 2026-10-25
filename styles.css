@@ -263,12 +263,12 @@ mark { background: var(--accent-soft); color: inherit; padding: 0 .3em; border-r
 .card .btn { background: var(--surface); border-color: var(--border); }
 
 /* ---------- Map ---------- */
-:root { --sea: #d6e6f5; --land: #ece8dc; --land-context: #dcdad3; --hl-dim: .35; }
-:root[data-theme="dark"] { --sea: #0f1a28; --land: #3b3b3b; --land-context: #262626; }
+:root { --sea: #bcd6ee; --land: #f6f1e4; --land-context: #d7d2c6; --border-map: #8a8577; --hl-dim: .35; }
+:root[data-theme="dark"] { --sea: #0b1522; --land: #5a564d; --land-context: #2c2a26; --border-map: #171717; }
 .map { border-radius: 12px; overflow: hidden; background: var(--sea); }
 .map svg { display: block; width: 100%; height: auto; }
-.map .context path { fill: var(--land-context); stroke: var(--sea); stroke-width: .6; }
-.map .country { fill: var(--land); stroke: var(--sea); stroke-width: .8; transition: fill .15s, opacity .15s; }
+.map .context path { fill: var(--land-context); stroke: var(--border-map); stroke-width: .5; opacity: .7; }
+.map .country { fill: var(--land); stroke: var(--border-map); stroke-width: .9; stroke-linejoin: round; transition: fill .15s, opacity .15s; }
 .map.interactive .country { cursor: pointer; }
 .map.interactive .country:hover { fill: var(--accent-soft); }
 .map .country.dot { stroke: var(--bg); stroke-width: 1.5; }
