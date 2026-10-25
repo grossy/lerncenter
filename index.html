@@ -29,32 +29,54 @@
     import { catalog, GRADES, gradeLabel } from './js/lessons/index.js';
     document.querySelector('.theme').onclick = toggleTheme;
 
-    const KEY = 'lerncenter-grade';
-    let filter = 'alle';
-    try { filter = localStorage.getItem(KEY) || 'alle'; } catch {}
+    const KEY_GRADE = 'lerncenter-grade';
+    const KEY_SUBJECT = 'lerncenter-subject';
+    let grade = 'alle', subject = 'alle';
+    try {
+      grade = localStorage.getItem(KEY_GRADE) || 'alle';
+      subject = localStorage.getItem(KEY_SUBJECT) || 'alle';
+    } catch {}
 
     const filterEl = document.getElementById('filter');
     const coursesEl = document.getElementById('courses');
+    const subjects = [...new Set(catalog.map((l) => l.subject))].sort((a, b) => a.localeCompare(b, 'de'));
+
+    function makeSelect(label, options, value, onChange) {
+      const wrap = document.createElement('label');
+      wrap.className = 'select';
+      wrap.innerHTML = `<span class="label">${label}</span>`;
+      const sel = document.createElement('select');
+      for (const o of options) {
+        const opt = document.createElement('option');
+        opt.value = o.value;
+        opt.textContent = o.text;
+        if (o.value === value) opt.selected = true;
+        sel.appendChild(opt);
+      }
+      sel.onchange = () => onChange(sel.value);
+      wrap.appendChild(sel);
+      return wrap;
+    }
 
     function renderFilter() {
-      filterEl.innerHTML = '<span class="label">Klasse:</span>';
-      const options = ['alle', ...GRADES];
-      for (const g of options) {
-        const count = g === 'alle' ? catalog.length : catalog.filter((l) => l.grade === g).length;
-        const b = document.createElement('button');
-        b.className = 'chip' + (String(g) === String(filter) ? ' selected' : '') + (count === 0 ? ' empty' : '');
-        b.textContent = g === 'alle' ? 'Alle' : gradeLabel(g, { short: true });
-        b.title = g === 'alle' ? 'Alle Lektionen' : gradeLabel(g) + (count === 0 ? ' – noch keine Lektionen' : '');
-        b.onclick = () => { filter = String(g); try { localStorage.setItem(KEY, filter); } catch {} renderFilter(); renderCourses(); };
-        filterEl.appendChild(b);
-      }
+      filterEl.innerHTML = '';
+      filterEl.appendChild(makeSelect('Fach',
+        [{ value: 'alle', text: 'Alle Fächer' }, ...subjects.map((s) => ({ value: s, text: s }))],
+        subject,
+        (v) => { subject = v; try { localStorage.setItem(KEY_SUBJECT, v); } catch {} renderCourses(); }));
+      filterEl.appendChild(makeSelect('Klasse',
+        [{ value: 'alle', text: 'Alle Klassen' }, ...GRADES.map((g) => ({ value: String(g), text: gradeLabel(g) }))],
+        grade,
+        (v) => { grade = v; try { localStorage.setItem(KEY_GRADE, v); } catch {} renderCourses(); }));
     }
 
     function renderCourses() {
-      const list = catalog.filter((l) => filter === 'alle' || String(l.grade) === filter);
+      const list = catalog.filter((l) =>
+        (grade === 'alle' || String(l.grade) === grade) &&
+        (subject === 'alle' || l.subject === subject));
       coursesEl.innerHTML = '';
       if (!list.length) {
-        coursesEl.innerHTML = '<p class="empty-state">Für diese Stufe gibt es noch keine Lektionen.</p>';
+        coursesEl.innerHTML = '<p class="empty-state">Für diese Auswahl gibt es noch keine Lektionen.</p>';
         return;
       }
       for (const l of list) {

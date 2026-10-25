@@ -208,13 +208,18 @@ mark { background: var(--accent-soft); color: inherit; padding: 0 .3em; border-r
 .course.soon { opacity: .6; }
 .course.soon .btn { background: transparent; border-color: #111; color: #111; }
 .c-music { background: #c9b8ff; }
-.c-rhythm { background: #8ee2b2; }
-.c-math { background: #ffd166; }
-.c-words { background: #ffb3c1; }
-.c-adult { background: #b8e0ff; }
 .filter { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-bottom: 1.5rem; }
-.filter .label { color: var(--muted); font-weight: 600; margin-right: .25rem; }
-.filter .chip.empty { opacity: .4; }
+.filter { gap: 1rem; }
+.filter .select { display: flex; align-items: center; gap: .5rem; }
+.filter .label { color: var(--muted); font-weight: 600; }
+.filter select {
+  font: inherit; font-weight: 600; color: var(--text); background: var(--surface);
+  border: 2px solid var(--border); border-radius: 12px; padding: .5em 2.2em .5em .9em; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23888' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right .9em center;
+}
+.filter select:focus { outline: none; border-color: var(--accent); }
 .empty-state { color: var(--muted); padding: 2rem 0; }
 
 /* Buttons auf Karten sollen sich vom Kartenhintergrund abheben */
