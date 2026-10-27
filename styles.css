@@ -245,6 +245,7 @@ mark { background: var(--accent-soft); color: inherit; padding: 0 .3em; border-r
 .c-music { background: #c9b8ff; }
 .c-adult { background: #b8e0ff; }
 .c-geo { background: #a8e6cf; }
+.c-math { background: #ffd166; }
 .filter { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-bottom: 1.5rem; }
 .filter { gap: 1rem; }
 .filter .select { display: flex; align-items: center; gap: .5rem; }
@@ -333,3 +334,43 @@ ul.plain li { padding: .15em 0; }
 .pads-foot { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-top: .5rem; color: var(--muted); font-size: .85rem; font-weight: 600; }
 .pads-foot .chip { padding: .25em .7em; font-size: .85rem; }
 @media (max-width: 480px) { .pad { font-size: .6rem; } .pad .badge { min-width: 15px; height: 15px; font-size: .55rem; } }
+
+/* ---------- Geometrie ---------- */
+.geo { display: block; width: 100%; max-width: 520px; height: auto; margin: 0 auto; background: var(--surface-2); border-radius: 10px; }
+.geo .grid line { stroke: var(--border); stroke-width: 1; }
+.geo .grid line.cm { stroke: var(--muted); stroke-opacity: .6; }
+.geo .shape { fill: var(--accent-soft); stroke: var(--text); stroke-width: 2.5; stroke-linejoin: round; }
+.geo .shape.outline { fill: none; }
+.geo .shape.dashed { fill: none; stroke-dasharray: 6 5; stroke: var(--muted); }
+.geo .shape.tri { fill: rgba(255, 183, 3, .45); }
+.geo .shape.para { fill: rgba(63, 193, 230, .4); }
+.geo .shape.cut { fill: rgba(255, 90, 95, .5); stroke-dasharray: 5 4; }
+.geo .edge { stroke: var(--text); stroke-width: 2; }
+.geo .edge.height { stroke: var(--bad); stroke-width: 2.5; stroke-dasharray: 6 4; }
+.geo .walk { stroke: var(--accent); stroke-width: 6; stroke-linecap: round; }
+.geo .fill { fill: var(--major); }
+.geo .fill.soft { fill: rgba(255, 183, 3, .35); }
+.geo .fill.piece { stroke: var(--text); stroke-width: 1.5; }
+.geo .fill.p0 { fill: rgba(255, 183, 3, .55); } .geo .fill.p1 { fill: rgba(63, 193, 230, .55); } .geo .fill.p2 { fill: rgba(123, 108, 255, .5); }
+.geo .fill.gap { fill: var(--surface-2); stroke: var(--bad); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.geo .lbl, .geo .tag { font: 700 13px var(--font); fill: var(--text); text-anchor: middle; paint-order: stroke; stroke: var(--surface-2); stroke-width: 3px; stroke-linejoin: round; }
+.geo .tag.left { text-anchor: start; }
+.geo .tag.warn { fill: var(--bad); font-size: 11px; }
+.geo .tag.missing { fill: var(--bad); font-size: 15px; }
+.geo .hit { stroke: transparent; stroke-width: 18; stroke-linecap: round; cursor: pointer; }
+.geo .hit:hover { stroke: rgba(123, 108, 255, .3); }
+.geo .hit.done { stroke: var(--ok); stroke-width: 6; }
+.sliders { display: grid; gap: .5rem; margin-top: 1rem; }
+.sliders label { display: grid; grid-template-columns: 1fr 2fr; align-items: center; gap: .75rem; font-weight: 600; }
+.sliders input[type=range] { width: 100%; accent-color: var(--accent); }
+.formulas { margin-top: .75rem; display: grid; gap: .4rem; font-size: 1.05rem; }
+.btn.accent { background: var(--accent); color: #fff; }
+.hint { color: var(--muted); font-weight: 500; margin-bottom: .3rem; }
+.quiz .figure { margin-top: .75rem; }
+.quiz .numeric { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; margin-top: .75rem; }
+.quiz .numeric .num { font: inherit; font-size: 1.2rem; font-weight: 700; width: 7rem; padding: .5em .7em; border-radius: 10px; border: 2px solid var(--border); background: var(--surface); color: var(--text); }
+.quiz .numeric .num:focus { outline: none; border-color: var(--accent); }
+.quiz .concept { display: flex; gap: .75rem; margin-top: .75rem; }
+.quiz .concept .btn { flex: 1; justify-content: center; }
+.checklist { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: .5rem; font-size: 1.05rem; }
+.checklist li { background: var(--surface-2); border-radius: 10px; padding: .6rem .9rem; }

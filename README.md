@@ -6,6 +6,7 @@ Lektionen:
 
 - **Kleine und grosse Terzen** (Musik, Klasse 6, Deutsch)
 - **Europa: Länder und Hauptstädte** (Geografie, Klasse 6, Deutsch) – klickbare Karte, Regionen, zwei Quiz, Lernkarten
+- **Flächeninhalt und Umfang** (Mathe, Klasse 6, Deutsch) – Rechteck, Dreieck, Parallelogramm, Teilflächen, fehlende Seiten, Übungsquiz
 - **One Vibe, Two Colours** (Musik, Erwachsene, Englisch) – Am11 → Fmaj9♯11 und Trugschluss
 - **Harmonic Constellations** (Musik, Erwachsene, Englisch) – Arpeggiator, Voice Leading, verschachtelte Progression in c-Moll
 

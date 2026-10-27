@@ -31,6 +31,17 @@ export const catalog = [
     load: () => import('./europa.js'),
   },
   {
+    id: 'flaeche',
+    title: 'Flächeninhalt und Umfang',
+    subject: 'Mathe',
+    grade: 6,
+    emoji: '📐',
+    color: 'c-math',
+    description: 'Rechteck, Dreieck, Parallelogramm und zusammengesetzte Figuren: Fläche und Umfang verstehen, Teilflächen, fehlende Seiten, Einheiten.',
+    available: true,
+    load: () => import('./flaeche.js'),
+  },
+  {
     id: 'harmonic-shift',
     title: 'One Vibe, Two Colours',
     subject: 'Musik',
