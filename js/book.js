@@ -4,7 +4,7 @@ import { h, confetti } from './lesson.js';
 import { playNote } from './audio.js';
 
 const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-const store = {
+export const store = {
   get(k) { try { return localStorage.getItem(k) || ''; } catch { return ''; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch {} },
 };

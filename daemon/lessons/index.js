@@ -52,6 +52,16 @@ export const catalog = [
     available: true,
     load: () => import('./sufi-order.js'),
   },
+  {
+    id: 'interests-business',
+    title: 'Turn Your Interests Into a Business',
+    subject: 'Books',
+    emoji: '🗺️',
+    color: 'c-book',
+    description: 'Dan Koe’s one-person business, with working tools: mission, content map, four-call offer and questionnaire, plus a calculator to test his numbers.',
+    available: true,
+    load: () => import('./interests-business.js'),
+  },
 ];
 
 export const lessons = Object.fromEntries(catalog.filter((l) => l.load).map((l) => [l.id, l.load]));

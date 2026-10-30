@@ -16,6 +16,7 @@ Engine, Styles und Komponenten, haben aber eigene Startseiten, Kataloge und URLs
 - **Swedish 1–10** (Swedish) – zehn Alltagssituationen, jeweils Wörter → Sätze → Konversation, mit Sprachausgabe: Hej!, Ett rum tack, Fika, Vart ska du?, I affären, Utflykt, Simma och basta, Hitta vägen, Ska vi ses?, Grattis!
 - **Catching the Big Fish** (Books) – David Lynch: Ideen als Fische, Fragmente, Red Room, vier Stunden für eine, dazu eine kritische Einordnung und Schreibaufgaben
 - **Metaphysical Order in Sufism** (Books) – Samer Akkach: Präsenz, Punkt und Kreis, sieben Seinszustände, vier Bedingungen des Schaffens, Buchstaben, kritische Einordnung und Schreibaufgaben
+- **Turn Your Interests Into a Business** (Books) – Dan Koe: Mission, Content Map, Vier-Calls-Angebot und Fragebogen als Werkzeuge, Rechner für seine Zahlen, kritische Einordnung
 
 GitHub Pages deployt automatisch bei jedem Push auf `main`.
 
