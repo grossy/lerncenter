@@ -32,6 +32,16 @@ export const catalog = [
     ['sv-09', 'Swedish 9: Ska vi ses?', '🎶', 'A night out and plans for Saturday. Three Swedish verbs for «think».', () => import('./sv-09-ut.js')],
     ['sv-10', 'Swedish 10: Grattis!', '🎂', 'A birthday dinner: family, weather and everything you say at a Swedish table.', () => import('./sv-10-middag.js')],
   ].map(([id, title, emoji, description, load]) => ({ id, title, subject: 'Swedish', emoji, color: 'c-adult', description, available: true, load })),
+  {
+    id: 'big-fish',
+    title: 'Catching the Big Fish',
+    subject: 'Books',
+    emoji: '🎣',
+    color: 'c-book',
+    description: 'David Lynch on where ideas come from: fish, bait, the Red Room and four hours for one. A method you can test, and beliefs you can question.',
+    available: true,
+    load: () => import('./big-fish.js'),
+  },
 ];
 
 export const lessons = Object.fromEntries(catalog.filter((l) => l.load).map((l) => [l.id, l.load]));

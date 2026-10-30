@@ -14,6 +14,7 @@ Engine, Styles und Komponenten, haben aber eigene Startseiten, Kataloge und URLs
 - **One Vibe, Two Colours** (Music) – Am11 → Fmaj9♯11 und Trugschluss
 - **Harmonic Constellations** (Music) – Arpeggiator, Voice Leading, verschachtelte Progression in c-Moll
 - **Swedish 1–10** (Swedish) – zehn Alltagssituationen, jeweils Wörter → Sätze → Konversation, mit Sprachausgabe: Hej!, Ett rum tack, Fika, Vart ska du?, I affären, Utflykt, Simma och basta, Hitta vägen, Ska vi ses?, Grattis!
+- **Catching the Big Fish** (Books) – David Lynch: Ideen als Fische, Fragmente, Red Room, vier Stunden für eine, dazu eine kritische Einordnung und Schreibaufgaben
 
 GitHub Pages deployt automatisch bei jedem Push auf `main`.
 
@@ -43,6 +44,7 @@ Dann <http://localhost:5173> öffnen.
 - `js/lessons/index.js` – Katalog der Kinder-Lektionen (Titel, Fach, Klassenstufe, Farbe, Loader)
 - `js/speech.js` – Sprachausgabe: spielt die Aufnahmen aus `daemon/audio/sv/`, die Gerätestimme nur als Notlösung
 - `tools/build_speech.py`, `tools/speech_phrases.mjs` – erzeugen die Aufnahmen mit Piper; das Korrekturwörterbuch für falsch betonte Wörter steht im Skript
+- `js/book.js` – Bausteine für Buch-Lektionen: Sortieren, Entscheiden, Notizen (nur im Browser), Timer
 - `js/language.js` – Sprachkurs-Baustein: `languageLesson(daten)` baut daraus die Seiten Wörter → Sätze → Konversation mit Rollenspiel
 
 ## Neue Lektion
@@ -57,6 +59,8 @@ Der Piano/Pads-Umschalter (`createInstrument` mit `pads`-Option) ist nur für Da
 
 **Interaktive Regler** («Tweak Bars», wie die Schieberegler in der Flächen-Lektion) nur dort einsetzen, wo das Herumspielen
 das Prinzip selbst zeigt, zum Beispiel wenn eine Grösse direkt von einer anderen abhängt. Nicht als Selbstzweck.
+
+**Bücher (Daemon, Fach `Books`):** Datei in `daemon/lessons/` mit den Bausteinen aus `js/book.js`, Karte mit `color: 'c-book'`. Ideen in eigenen Worten nacherzählen, höchstens ein kurzes Zitat pro Lektion, keine längeren Passagen. Jede Lektion trennt, was man anwenden kann, von Behauptungen, die umstritten sind, und enthält Aufgaben zum eigenen Arbeiten.
 
 ## Schwedischkurs und Urheberrecht
 
