@@ -21,6 +21,7 @@
       <h1>Daemon</h1>
       <p>Harmony, language and ideas to play with. Listen, try, understand.</p>
     </section>
+    <nav class="chips subjects" id="subjects" aria-label="Subject"></nav>
     <section class="lesson-list" id="lessons"></section>
   </main>
   <script type="module">
@@ -28,23 +29,54 @@
     import { catalog } from './lessons/index.js';
     document.querySelector('.theme').onclick = toggleTheme;
 
-    // Grouped by subject, in catalog order, one compact row per lesson.
+    // Subject filter (chips) + list grouped by subject, in catalog order, one compact row per lesson.
+    const KEY_SUBJECT = 'daemon-subject';
+    const subjects = [...new Set(catalog.map((l) => l.subject))];
+    let subject = 'all';
+    try { subject = localStorage.getItem(KEY_SUBJECT) || 'all'; } catch {}
+    if (subject !== 'all' && !subjects.includes(subject)) subject = 'all';
+
+    const chipsEl = document.getElementById('subjects');
     const host = document.getElementById('lessons');
-    const groups = new Map();
-    for (const l of catalog) (groups.get(l.subject) || groups.set(l.subject, []).get(l.subject)).push(l);
-    for (const [subject, list] of groups) {
-      const sec = document.createElement('section');
-      sec.className = 'group';
-      sec.innerHTML = `<h2>${subject}<span class="count">${list.length}</span></h2>`;
-      for (const l of list) {
-        const row = document.createElement(l.available ? 'a' : 'div');
-        row.className = `row${l.available ? '' : ' soon'}`;
-        if (l.available) row.href = `lesson.html?id=${l.id}`;
-        row.innerHTML = `<span class="title">${l.title}</span><span class="desc">${l.description}</span><span class="go" aria-hidden="true">${l.available ? '→' : 'soon'}</span>`;
-        sec.appendChild(row);
+
+    function renderChips() {
+      chipsEl.innerHTML = '';
+      for (const s of ['all', ...subjects]) {
+        const b = document.createElement('button');
+        b.className = 'chip' + (s === subject ? ' selected' : '');
+        b.textContent = s === 'all' ? 'All' : s;
+        b.onclick = () => {
+          subject = s;
+          try { localStorage.setItem(KEY_SUBJECT, s); } catch {}
+          renderChips(); renderList();
+        };
+        chipsEl.appendChild(b);
       }
-      host.appendChild(sec);
     }
+
+    function renderList() {
+      host.innerHTML = '';
+      const groups = new Map();
+      for (const l of catalog) {
+        if (subject !== 'all' && l.subject !== subject) continue;
+        (groups.get(l.subject) || groups.set(l.subject, []).get(l.subject)).push(l);
+      }
+      for (const [name, list] of groups) {
+        const sec = document.createElement('section');
+        sec.className = 'group';
+        sec.innerHTML = `<h2>${name}<span class="count">${list.length}</span></h2>`;
+        for (const l of list) {
+          const row = document.createElement(l.available ? 'a' : 'div');
+          row.className = `row${l.available ? '' : ' soon'}`;
+          if (l.available) row.href = `lesson.html?id=${l.id}`;
+          row.innerHTML = `<span class="title">${l.title}</span><span class="desc">${l.description}</span><span class="go" aria-hidden="true">${l.available ? '→' : 'soon'}</span>`;
+          sec.appendChild(row);
+        }
+        host.appendChild(sec);
+      }
+    }
+    renderChips();
+    renderList();
   </script>
 </body>
 </html>
