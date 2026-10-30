@@ -607,6 +607,8 @@ body.daemon .c-book { background: #f4c98f; }
 .ppad.is-c { background: #f5a95c; }
 .ppad.path { box-shadow: inset 0 0 0 2px #7b6cff; }
 .ppad.next { box-shadow: inset 0 0 0 3px #5b4cff, 0 0 0 1px #fff; }
+.ppad.next2 { box-shadow: inset 0 0 0 3px #e8743b, 0 0 0 1px #fff; }
+.ppad.next2 .pfin { background: #e8743b; }
 .ppad.lit { background: #35d07f; color: #06301b; }
 .ppad .pfin {
   position: absolute; top: 2px; right: 2px; min-width: 18px; height: 18px; line-height: 18px; text-align: center; border-radius: 50%;

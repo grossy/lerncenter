@@ -75,7 +75,7 @@ const hear = (midis, dur = 0.9) => playChord(midis, { dur, type: 'pad', vel: mid
 /**
  * Übung: zuschauen oder selbst spielen.
  * variants: [{ label, steps, updown, flat, anchor, ms }]
- * steps:    [{ cells: [[r,c],…], fingers: ['T','I'], text }] · fingers fehlt = eine Spalte, ein Finger (ab anchor)
+ * steps:    [{ cells: [[r,c],…], fingers, names, text }] · names: Tonnamen für die Anzeige, falls die Schreibweise zählt · fingers: ['T','I'] oder { left: […], right: […] }, fehlt = eine Spalte, ein Finger (ab anchor)
  * speeds:   [{ label, ms }] · hand: false blendet die Handwahl aus
  */
 export function drill(host, { variants, speeds = null, hand = true }) {
@@ -96,12 +96,16 @@ export function drill(host, { variants, speeds = null, hand = true }) {
   $('.pdrill-grid').appendChild(grid.el);
   const read = $('.pdrill-read');
 
-  const fingersOf = (st) => st.fingers || st.cells.map(([, c]) => FINGERS[handSide][c - (list[vi].anchor || 0)] || '');
+  const fingersOf = (st) => {
+    if (Array.isArray(st.fingers)) return st.fingers;
+    if (st.fingers) return st.fingers[handSide];
+    return st.cells.map(([, c]) => FINGERS[handSide][c - (list[vi].anchor || 0)] || '');
+  };
   const midisOf = (st) => st.cells.map(([r, c]) => midiAt(r, c));
   const flat = () => !!list[vi].flat;
 
   function describe(st) {
-    const f = fingersOf(st), names = midisOf(st).map((m) => nameOf(m, flat()));
+    const f = fingersOf(st), names = st.names || midisOf(st).map((m) => nameOf(m, flat()));
     const who = st.cells.map((_, k) => `${names[k]} ${FINGER_NAME[f[k]] ? `(${FINGER_NAME[f[k]].toLowerCase()})` : ''}`).join(' + ');
     return `${who}${st.text ? ` · ${st.text}` : ''}`;
   }

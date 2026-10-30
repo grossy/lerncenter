@@ -30,6 +30,16 @@ export const catalog = [
     available: true,
     load: () => import('./push-01-basics.js'),
   },
+  {
+    id: 'push-02-sevenths',
+    title: 'Push 2: Slick 7th Chords',
+    subject: 'Music',
+    emoji: '🎛️',
+    color: 'c-adult',
+    description: 'Major and minor 7 chords as one-hand shapes, closed and open, a falling progression, then big two-hand voicings.',
+    available: true,
+    load: () => import('./push-02-sevenths.js'),
+  },
   ...[
     ['sv-01', 'Swedish 1: Hej!', '👋', 'Meet people: names, where you are from, where you live and what you do.', () => import('./sv-01-hej.js')],
     ['sv-02', 'Swedish 2: Ett rum, tack', '🏨', 'Book a hotel room by phone and check in. Numbers 1 to 10, and how Swedish says «the».', () => import('./sv-02-hotell.js')],
