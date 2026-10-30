@@ -1,9 +1,8 @@
-// Katalog aller Lektionen mit Metadaten. grade: 1–13 oder 'erwachsene'.
-export const ADULT = 'erwachsene';
-export const GRADES = [...Array.from({ length: 13 }, (_, i) => i + 1), ADULT];
+// Katalog der Kinder-Lektionen (Lerncenter). grade: 1–13.
+// Erwachsenen-Lektionen leben getrennt in daemon/lessons/index.js.
+export const GRADES = Array.from({ length: 13 }, (_, i) => i + 1);
 
 export function gradeLabel(grade, { short = false } = {}) {
-  if (grade === ADULT) return 'Erwachsene';
   return short ? `${grade}` : `Klasse ${grade}`;
 }
 
@@ -40,28 +39,6 @@ export const catalog = [
     description: 'Rechteck, Dreieck, Parallelogramm und zusammengesetzte Figuren: Fläche und Umfang verstehen, Teilflächen, fehlende Seiten, Einheiten.',
     available: true,
     load: () => import('./flaeche.js'),
-  },
-  {
-    id: 'harmonic-shift',
-    title: 'One Vibe, Two Colours',
-    subject: 'Musik',
-    grade: ADULT,
-    emoji: '🎹',
-    color: 'c-adult',
-    description: 'Englisch · Am11 to Fmaj9♯11: shift the colour of a chord without changing the chord, plus a deceptive cadence.',
-    available: true,
-    load: () => import('./harmonic-shift.js'),
-  },
-  {
-    id: 'constellations',
-    title: 'Harmonic Constellations',
-    subject: 'Musik',
-    grade: ADULT,
-    emoji: '✨',
-    color: 'c-adult',
-    description: 'Englisch · Arpeggiated chords in C minor, voice leading, and a progression nested inside one arpeggiated chord.',
-    available: true,
-    load: () => import('./constellations.js'),
   },
 ];
 

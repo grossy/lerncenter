@@ -1,8 +1,8 @@
 // Lesson (en, adults): One vibe, two colours – A minor 11 → F major 9 ♯11 → deceptive cadence
-import { playNote, playChord } from '../audio.js';
-import { createInstrument } from '../instrument.js';
-import { h } from '../lesson.js';
-import { nn, label, showChord, strum, bassLine, loopPlayer as sharedLoopPlayer, voicingWidget as sharedVoicing, chordCardsWidget } from '../widgets.js';
+import { playNote, playChord } from '../../js/audio.js';
+import { createInstrument } from '../../js/instrument.js';
+import { h } from '../../js/lesson.js';
+import { nn, label, showChord, strum, bassLine, loopPlayer as sharedLoopPlayer, voicingWidget as sharedVoicing, chordCardsWidget } from '../../js/widgets.js';
 
 const RANGE = { from: 48, to: 76, pads: { root: 9, scale: [0, 2, 3, 5, 7, 8, 10] } }; // C3 – E5 · Pads: A minor
 const BPM = 84;
@@ -128,8 +128,7 @@ export default {
   id: 'harmonic-shift',
   lang: 'en',
   title: 'One Vibe, Two Colours',
-  subject: 'Musik',
-  grade: 'erwachsene',
+  subject: 'Music',
   pages: [
     {
       title: 'One vibe, more than one chord',

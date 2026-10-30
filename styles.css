@@ -374,3 +374,8 @@ ul.plain li { padding: .15em 0; }
 .quiz .concept .btn { flex: 1; justify-content: center; }
 .checklist { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: .5rem; font-size: 1.05rem; }
 .checklist li { background: var(--surface-2); border-radius: 10px; padding: .6rem .9rem; }
+
+/* ---------- Daemon (Erwachsenen-Center, /daemon/) ---------- */
+body.daemon { --accent: #0f766e; --accent-soft: #d6f2ee; }
+:root[data-theme="dark"] body.daemon { --accent: #0d9488; --accent-soft: #123a36; }
+body.daemon .c-adult { background: #9fe3d8; }

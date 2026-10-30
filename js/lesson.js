@@ -1,18 +1,18 @@
 // Lektions-Engine: rendert Seiten einer Lektion, Navigation, Fortschritt.
+// Wird von Lerncenter (Kinder, /) und Daemon (Erwachsene, /daemon/) geteilt.
 import { initTheme, toggleTheme } from './theme.js';
-import { gradeLabel } from './lessons/index.js';
 
 const STRINGS = {
   de: { page: (n, t) => `Seite ${n} von ${t}`, back: '← Zurück', next: 'Weiter →', overview: 'Zur Übersicht', close: 'Zur Übersicht', tryThis: '👉 Probier das', theme: 'Hell / Dunkel' },
   en: { page: (n, t) => `Page ${n} of ${t}`, back: '← Back', next: 'Continue →', overview: 'Back to overview', close: 'Back to overview', tryThis: '👉 Try this', theme: 'Light / Dark' },
 };
 
-export function mountLesson(lesson) {
+export function mountLesson(lesson, { brand = 'Lerncenter', tag = null } = {}) {
   initTheme();
   const app = document.getElementById('app');
   const t = STRINGS[lesson.lang] || STRINGS.de;
   document.documentElement.lang = lesson.lang || 'de';
-  document.title = `${lesson.title} | Lerncenter`;
+  document.title = `${lesson.title} | ${brand}`;
   const total = lesson.pages.length;
   let idx = parsePage();
   let current = null;
@@ -35,7 +35,7 @@ export function mountLesson(lesson) {
     app.innerHTML = `
       <header class="topbar">
         <a class="iconbtn close" href="index.html" aria-label="${t.close}">✕</a>
-        <div class="topbar-title">${lesson.title}${lesson.grade ? ` <span class="tag grade">${gradeLabel(lesson.grade)}</span>` : ''}</div>
+        <div class="topbar-title">${lesson.title}${tag ? ` <span class="tag grade">${tag}</span>` : ''}</div>
         <button class="iconbtn theme" aria-label="${t.theme}">◐</button>
       </header>
       <main class="lesson">

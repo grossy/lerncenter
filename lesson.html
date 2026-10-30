@@ -15,14 +15,14 @@
 <body>
   <div id="app"></div>
   <script type="module">
-    import { lessons } from './js/lessons/index.js';
+    import { lessons, gradeLabel } from './js/lessons/index.js';
     import { mountLesson } from './js/lesson.js';
     const id = new URLSearchParams(location.search).get('id') || 'terzen';
     const load = lessons[id];
     if (!load) {
       document.getElementById('app').innerHTML = '<main class="lesson"><h1>Lektion nicht gefunden</h1><p><a href="index.html">Zur Übersicht</a></p></main>';
     } else {
-      load().then((m) => mountLesson(m.default));
+      load().then((m) => mountLesson(m.default, { brand: 'Lerncenter', tag: gradeLabel(m.default.grade) }));
     }
   </script>
 </body>

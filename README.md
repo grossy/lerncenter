@@ -1,16 +1,20 @@
-# Lerncenter
+# Lerncenter und Daemon
 
-Proof of Concept für eine Lern-Webapp für Kinder, inspiriert von [Ableton Learn](https://learn.ableton.com/).
+Zwei getrennte Lern-Webapps in einem Repo, inspiriert von [Ableton Learn](https://learn.ableton.com/). Sie teilen sich
+Engine, Styles und Komponenten, haben aber eigene Startseiten, Kataloge und URLs und verlinken nicht aufeinander.
 
-Lektionen:
+**Lerncenter** (Kinder, Deutsch) – <https://grossy.github.io/lerncenter/>
 
-- **Kleine und grosse Terzen** (Musik, Klasse 6, Deutsch)
-- **Europa: Länder und Hauptstädte** (Geografie, Klasse 6, Deutsch) – klickbare Karte, Regionen, zwei Quiz, Lernkarten
-- **Flächeninhalt und Umfang** (Mathe, Klasse 6, Deutsch) – Rechteck, Dreieck, Parallelogramm, Teilflächen, fehlende Seiten, Übungsquiz
-- **One Vibe, Two Colours** (Musik, Erwachsene, Englisch) – Am11 → Fmaj9♯11 und Trugschluss
-- **Harmonic Constellations** (Musik, Erwachsene, Englisch) – Arpeggiator, Voice Leading, verschachtelte Progression in c-Moll
+- **Kleine und grosse Terzen** (Musik, Klasse 6)
+- **Europa: Länder und Hauptstädte** (Geografie, Klasse 6) – klickbare Karte, Regionen, zwei Quiz, Lernkarten
+- **Flächeninhalt und Umfang** (Mathe, Klasse 6) – Rechteck, Dreieck, Parallelogramm, Teilflächen, fehlende Seiten, Übungsquiz
 
-**Live:** <https://grossy.github.io/lerncenter/> (GitHub Pages, deployt automatisch bei jedem Push auf `main`).
+**Daemon** (Erwachsene, Englisch) – <https://grossy.github.io/lerncenter/daemon/>
+
+- **One Vibe, Two Colours** (Music) – Am11 → Fmaj9♯11 und Trugschluss
+- **Harmonic Constellations** (Music) – Arpeggiator, Voice Leading, verschachtelte Progression in c-Moll
+
+GitHub Pages deployt automatisch bei jedem Push auf `main`.
 
 ## Starten
 
@@ -24,26 +28,31 @@ Dann <http://localhost:5173> öffnen.
 
 ## Struktur
 
-- `index.html` – Übersicht aller Kurse/Lektionen
-- `lesson.html?id=terzen` – Lektions-Player (Seiten, Fortschritt, Weiter/Zurück)
-- `js/lesson.js` – Lektions-Engine (rendert Seiten aus einer Lektionsdefinition)
+- `index.html` – Lerncenter-Startseite (Kinder) mit Dropdowns für Fach und Klasse
+- `lesson.html?id=terzen` – Lektions-Player des Lerncenters
+- `daemon/index.html`, `daemon/lesson.html?id=harmonic-shift` – Startseite und Player von Daemon (Erwachsene, Englisch)
+- `daemon/lessons/` – Daemon-Lektionen und ihr Katalog (`daemon/lessons/index.js`)
+- `js/lesson.js` – gemeinsame Lektions-Engine; `mountLesson(lesson, { brand, tag })` bekommt Marke und Kopf-Tag vom Player
 - `js/audio.js` – kleiner Web-Audio-Synth (Klavier-ähnlich)
 - `js/piano.js` – Klaviatur-Komponente
 - `js/lessons/terzen.js` – Inhalt und Widgets der Terzen-Lektion
 - `js/map.js` – klickbare Europakarte (SVG), `js/data/europe-map.js` – vorberechnete Länderumrisse
 - `js/pads.js` – 8×8-Pad-Grid im isomorphen Fourths-Layout (Push/Launchpad), `js/instrument.js` – Piano/Pads-Umschalter
 - `js/widgets.js` – gemeinsame Akkord-Widgets (Loop-Player, Voicing-Schritte, Root-Wechsel, Arpeggiator)
-- `js/lessons/harmonic-shift.js`, `js/lessons/constellations.js` – englische Erwachsenen-Lektionen
-- `js/lessons/index.js` – Katalog aller Lektionen (Titel, Fach, Klassenstufe, Farbe, Loader)
+- `js/lessons/index.js` – Katalog der Kinder-Lektionen (Titel, Fach, Klassenstufe, Farbe, Loader)
 
-## Klassenstufen
+## Neue Lektion
 
-Jede Lektion hat ein `grade`: `1`–`13` oder `'erwachsene'` (Konstante `ADULT`). Die Startseite hat oben einen
-Kinder/Erwachsene-Umschalter; im Kinder-Modus gibt es zusätzlich Dropdowns für Fach und Klasse. Der Lektions-Player
-zeigt die Stufe im Kopf an.
+**Lerncenter (Kinder, Deutsch):** Datei in `js/lessons/` anlegen (Default-Export mit `id`, `title`, `subject`, `grade` 1–13, `pages`),
+dann einen Eintrag im `catalog` in `js/lessons/index.js` ergänzen. Der Text muss sprachlich zur Klassenstufe passen
+(Klasse 6 = 11- bis 12-Jährige); Schweizer Schreibweise mit ss.
 
-Neue Lektion: Datei in `js/lessons/` anlegen (Default-Export mit `id`, `title`, `subject`, `grade`, optional `lang: 'en'`, `pages`),
-dann einen Eintrag im `catalog` in `js/lessons/index.js` ergänzen. Die Startseite rendert die Karten daraus.
+**Daemon (Erwachsene, Englisch):** Datei in `daemon/lessons/` anlegen (Default-Export mit `id`, `title`, `subject`, `lang: 'en'`, `pages`),
+Eintrag im `catalog` in `daemon/lessons/index.js`. Gemeinsame Module werden mit `../../js/…` importiert.
+Der Piano/Pads-Umschalter (`createInstrument` mit `pads`-Option) ist nur für Daemon gedacht.
+
+**Interaktive Regler** («Tweak Bars», wie die Schieberegler in der Flächen-Lektion) nur dort einsetzen, wo das Herumspielen
+das Prinzip selbst zeigt, zum Beispiel wenn eine Grösse direkt von einer anderen abhängt. Nicht als Selbstzweck.
 
 ## Kartendaten
 

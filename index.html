@@ -14,10 +14,6 @@
 <body>
   <header class="topbar">
     <div class="topbar-title" style="padding-left:.5rem">🎓 Lerncenter</div>
-    <div class="segmented audience" role="group" aria-label="Zielgruppe">
-      <button data-audience="kinder">Kinder</button>
-      <button data-audience="erwachsene">Erwachsene</button>
-    </div>
     <button class="iconbtn theme" aria-label="Hell / Dunkel">◐</button>
   </header>
   <main class="home">
@@ -30,34 +26,21 @@
   </main>
   <script type="module">
     import { toggleTheme } from './js/theme.js';
-    import { catalog, GRADES, ADULT, gradeLabel } from './js/lessons/index.js';
+    import { catalog, GRADES, gradeLabel } from './js/lessons/index.js';
     document.querySelector('.theme').onclick = toggleTheme;
 
     const KEY_GRADE = 'lerncenter-grade';
     const KEY_SUBJECT = 'lerncenter-subject';
-    const KEY_AUDIENCE = 'lerncenter-audience';
-    let grade = 'alle', subject = 'alle', audience = 'kinder';
+    let grade = 'alle', subject = 'alle';
     try {
       grade = localStorage.getItem(KEY_GRADE) || 'alle';
       subject = localStorage.getItem(KEY_SUBJECT) || 'alle';
-      audience = localStorage.getItem(KEY_AUDIENCE) || 'kinder';
     } catch {}
-    if (grade === ADULT) grade = 'alle';
-
-    const audienceEl = document.querySelector('.audience');
-    function renderAudience() {
-      audienceEl.querySelectorAll('button').forEach((b) => b.classList.toggle('selected', b.dataset.audience === audience));
-    }
-    audienceEl.querySelectorAll('button').forEach((b) => (b.onclick = () => {
-      audience = b.dataset.audience;
-      try { localStorage.setItem(KEY_AUDIENCE, audience); } catch {}
-      renderAudience(); renderFilter(); renderCourses();
-    }));
+    if (!/^(alle|\d+)$/.test(grade)) grade = 'alle';
 
     const filterEl = document.getElementById('filter');
     const coursesEl = document.getElementById('courses');
-    const inAudience = (l) => (audience === 'erwachsene' ? l.grade === ADULT : l.grade !== ADULT);
-    const subjects = () => [...new Set(catalog.filter(inAudience).map((l) => l.subject))].sort((a, b) => a.localeCompare(b, 'de'));
+    const subjects = () => [...new Set(catalog.map((l) => l.subject))].sort((a, b) => a.localeCompare(b, 'de'));
 
     function makeSelect(label, options, value, onChange) {
       const wrap = document.createElement('label');
@@ -82,17 +65,15 @@
         [{ value: 'alle', text: 'Alle Fächer' }, ...subjects().map((s) => ({ value: s, text: s }))],
         subject,
         (v) => { subject = v; try { localStorage.setItem(KEY_SUBJECT, v); } catch {} renderCourses(); }));
-      if (audience !== 'erwachsene') {
-        filterEl.appendChild(makeSelect('Klasse',
-          [{ value: 'alle', text: 'Alle Klassen' }, ...GRADES.filter((g) => g !== ADULT).map((g) => ({ value: String(g), text: gradeLabel(g) }))],
-          grade,
-          (v) => { grade = v; try { localStorage.setItem(KEY_GRADE, v); } catch {} renderCourses(); }));
-      }
+      filterEl.appendChild(makeSelect('Klasse',
+        [{ value: 'alle', text: 'Alle Klassen' }, ...GRADES.map((g) => ({ value: String(g), text: gradeLabel(g) }))],
+        grade,
+        (v) => { grade = v; try { localStorage.setItem(KEY_GRADE, v); } catch {} renderCourses(); }));
     }
 
     function renderCourses() {
-      const list = catalog.filter((l) => inAudience(l) &&
-        (audience === 'erwachsene' || grade === 'alle' || String(l.grade) === grade) &&
+      const list = catalog.filter((l) =>
+        (grade === 'alle' || String(l.grade) === grade) &&
         (subject === 'alle' || l.subject === subject));
       coursesEl.innerHTML = '';
       if (!list.length) {
@@ -113,7 +94,6 @@
         coursesEl.appendChild(el);
       }
     }
-    renderAudience();
     renderFilter();
     renderCourses();
   </script>
