@@ -34,7 +34,7 @@ Dann <http://localhost:5173> öffnen.
 
 - `index.html` – Lerncenter-Startseite (Kinder) mit Dropdowns für Fach und Klasse
 - `lesson.html?id=terzen` – Lektions-Player des Lerncenters
-- `daemon/index.html`, `daemon/lesson.html?id=harmonic-shift` – Startseite und Player von Daemon (Erwachsene, Englisch)
+- `daemon/index.html`, `daemon/lesson.html?id=harmonic-shift` – Startseite (kompakte Liste, nach Fach gruppiert, ohne Icons) und Player von Daemon (Erwachsene, Englisch)
 - `daemon/lessons/` – Daemon-Lektionen und ihr Katalog (`daemon/lessons/index.js`)
 - `js/lesson.js` – gemeinsame Lektions-Engine; `mountLesson(lesson, { brand, tag })` bekommt Marke und Kopf-Tag vom Player
 - `js/audio.js` – kleiner Web-Audio-Synth (Klavier-ähnlich)

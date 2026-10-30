@@ -13,69 +13,38 @@
 </head>
 <body class="daemon">
   <header class="topbar">
-    <div class="topbar-title" style="padding-left:.5rem">👾 Daemon</div>
+    <div class="topbar-title" style="padding-left:.5rem">Daemon</div>
     <button class="iconbtn theme" aria-label="Light / Dark">◐</button>
   </header>
-  <main class="home">
+  <main class="home compact">
     <section class="hero">
       <h1>Daemon</h1>
-      <p>Harmony, sound and ideas to play with. Listen, try, understand – straight in the browser.</p>
+      <p>Harmony, language and ideas to play with. Listen, try, understand.</p>
     </section>
-    <section class="filter" id="filter"></section>
-    <section class="courses" id="courses"></section>
+    <section class="lesson-list" id="lessons"></section>
   </main>
   <script type="module">
     import { toggleTheme } from '../js/theme.js';
     import { catalog } from './lessons/index.js';
     document.querySelector('.theme').onclick = toggleTheme;
 
-    const KEY_SUBJECT = 'daemon-subject';
-    let subject = 'all';
-    try { subject = localStorage.getItem(KEY_SUBJECT) || 'all'; } catch {}
-
-    const filterEl = document.getElementById('filter');
-    const coursesEl = document.getElementById('courses');
-    const subjects = [...new Set(catalog.map((l) => l.subject))].sort((a, b) => a.localeCompare(b, 'en'));
-
-    function renderFilter() {
-      filterEl.innerHTML = '';
-      if (subjects.length < 2) return; // one subject: nothing to filter yet
-      const wrap = document.createElement('label');
-      wrap.className = 'select';
-      wrap.innerHTML = '<span class="label">Subject</span>';
-      const sel = document.createElement('select');
-      for (const o of [{ value: 'all', text: 'All subjects' }, ...subjects.map((s) => ({ value: s, text: s }))]) {
-        const opt = document.createElement('option');
-        opt.value = o.value; opt.textContent = o.text; opt.selected = o.value === subject;
-        sel.appendChild(opt);
-      }
-      sel.onchange = () => { subject = sel.value; try { localStorage.setItem(KEY_SUBJECT, subject); } catch {} renderCourses(); };
-      wrap.appendChild(sel);
-      filterEl.appendChild(wrap);
-    }
-
-    function renderCourses() {
-      const list = catalog.filter((l) => subject === 'all' || l.subject === subject);
-      coursesEl.innerHTML = '';
-      if (!list.length) {
-        coursesEl.innerHTML = '<p class="empty-state">No lessons for this selection yet.</p>';
-        return;
-      }
+    // Grouped by subject, in catalog order, one compact row per lesson.
+    const host = document.getElementById('lessons');
+    const groups = new Map();
+    for (const l of catalog) (groups.get(l.subject) || groups.set(l.subject, []).get(l.subject)).push(l);
+    for (const [subject, list] of groups) {
+      const sec = document.createElement('section');
+      sec.className = 'group';
+      sec.innerHTML = `<h2>${subject}<span class="count">${list.length}</span></h2>`;
       for (const l of list) {
-        const el = document.createElement(l.available ? 'a' : 'div');
-        el.className = `course ${l.color}${l.available ? '' : ' soon'}`;
-        if (l.available) el.href = `lesson.html?id=${l.id}`;
-        el.innerHTML = `
-          <div class="art">${l.emoji}</div>
-          <div class="meta">${l.subject}</div>
-          <h2>${l.title}</h2>
-          <p>${l.description}</p>
-          <span class="btn${l.available ? '' : ' ghost'}">${l.available ? 'Start →' : 'Soon…'}</span>`;
-        coursesEl.appendChild(el);
+        const row = document.createElement(l.available ? 'a' : 'div');
+        row.className = `row${l.available ? '' : ' soon'}`;
+        if (l.available) row.href = `lesson.html?id=${l.id}`;
+        row.innerHTML = `<span class="title">${l.title}</span><span class="desc">${l.description}</span><span class="go" aria-hidden="true">${l.available ? '→' : 'soon'}</span>`;
+        sec.appendChild(row);
       }
+      host.appendChild(sec);
     }
-    renderFilter();
-    renderCourses();
   </script>
 </body>
 </html>
