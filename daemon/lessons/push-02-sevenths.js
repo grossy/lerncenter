@@ -1,6 +1,6 @@
 // Lesson (en, adults): Push 2 – major and minor 7th chords: closed and open shapes, falling progression, two hands
 import { h, confetti } from '../../js/lesson.js';
-import { playNote, playChord, createLoop } from '../../js/audio.js';
+import { playNote, playChord, letRing, createLoop } from '../../js/audio.js';
 import { createGrid, drill, midiAt, nameOf, SIZE } from '../../js/push.js';
 
 /* ---- shapes, from the thumb on the root. Minor = third and seventh one pad to the left ---- */
@@ -111,20 +111,21 @@ function placerWidget({ kinds = ['closed'], qualities = ['major'], recorder = fa
     </div>`);
     host.appendChild(root);
     const read = root.querySelector('.readout');
-    const grid = createGrid({ flat: true, onPad(r, c) {
+    const grid = createGrid({ flat: true, onPad(r, c, _m, _p, hardware) {
       const cs = SHAPES[kind].cells(r, c, minor);
       if (!fits(cs)) { grid.shake(r, c); read.textContent = 'This shape does not fit here. Try further from the edge.'; return; }
-      place(cs, midiAt(r, c), minor, kind);
+      place(cs, midiAt(r, c), minor, kind, hardware);
       if (recorder) remember({ cs, root: midiAt(r, c), minor });
     } });
     root.querySelector('.pgrid-host').appendChild(grid.el);
-    function place(cs, rt, min, k) {
+    function place(cs, rt, min, k, hardware) {
       current = cs;
       grid.unmark('next'); grid.clearFingers();
       grid.mark(cs, 'next');
       cs.forEach(([r, c], i) => grid.finger(r, c, SHAPES[k].fingers.left[i]));
       if (!loop) {
-        playChord(midis(cs), { dur: 1.8, type: 'rhodes', vel: 0.24 });
+        const strike = () => playChord(midis(cs), { dur: 1.8, type: 'rhodes', vel: 0.24 });
+        if (hardware) strike(); else letRing(strike);
         midis(cs).forEach((m) => grid.light(m, 700));
       }
       placed.add(rt % 12);

@@ -237,7 +237,7 @@ function twoHandsWidget(host) {
   host.appendChild(root);
   const $ = (s) => root.querySelector(s);
   const grid = createGrid({ onPad(r, c, m) {
-    playNote(m, { dur: pedal ? 2.6 : 0.3, type: 'rhodes', vel: 0.3 });
+    playNote(m, { dur: 2.6, type: 'rhodes', vel: 0.3 });
     grid.light(m);
     if (!isNatural(m)) {
       $('.readout').className = 'readout bad';
@@ -248,6 +248,7 @@ function twoHandsWidget(host) {
     }
   } });
   $('.pgrid-host').appendChild(grid.el);
+  grid.setSustain(pedal);
   function showBar(b) {
     root.querySelectorAll('.bar').forEach((x, k) => x.classList.toggle('active', k === b));
     grid.unmark('next'); grid.clearFingers();
@@ -279,7 +280,7 @@ function twoHandsWidget(host) {
     root.querySelectorAll('[data-p]').forEach((x) => x.classList.toggle('selected', x === c));
     if (loop) { stop(); start(); }
   }));
-  $('.pedal').onclick = () => { pedal = !pedal; $('.pedal').classList.toggle('selected', pedal); };
+  $('.pedal').onclick = () => { pedal = !pedal; grid.setSustain(pedal); $('.pedal').classList.toggle('selected', pedal); };
   showBar(0);
   return { destroy: stop };
 }

@@ -47,9 +47,11 @@ function attachPorts() {
 }
 function onMessage({ data }) {
   const [kind, note, vel] = data;
-  if ((kind & 0xf0) !== 0x90 || !vel) return;
+  const type = kind & 0xf0;
+  if (type !== 0x90 && type !== 0x80) return;
   const r = Math.floor(note / 10) - 1, c = note % 10 - 1;
   if (r < 0 || r >= SIZE || c < 0 || c >= SIZE) return;
+  if (type === 0x80 || !vel) { if (active?.el.isConnected) active.release(r, c); return; }
   lastPad = [r, c];
   if (active?.el.isConnected) active.press(r, c);
   tell();

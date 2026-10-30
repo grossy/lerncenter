@@ -4,7 +4,7 @@
 import { h, confetti } from './lesson.js';
 import { playChord } from './audio.js';
 import { noteName } from './piano.js';
-import { getCtx } from './audio.js';
+import { getCtx, holdNotes, letRing } from './audio.js';
 import { midiSupported, controllerState, onControllerChange, attachGrid, connectController, disconnectController, repaint } from './midi.js';
 
 export const SIZE = 8;
@@ -12,6 +12,8 @@ const BASE = 48;
 const NATURAL = new Set([0, 2, 4, 5, 7, 9, 11]);
 const FINGER_NAME = { P: 'Pinky', R: 'Ring', M: 'Middle', I: 'Pointer', T: 'Thumb' };
 const FINGERS = { left: ['P', 'R', 'M', 'I', 'T'], right: ['T', 'I', 'M', 'R', 'P'] };
+const TAP_MS = 300; // ein Mausklick ist kurz, so bleibt er trotzdem hörbar
+const DAMPER = 0.12; // wie schnell der Ton nach dem Loslassen weg ist
 const LED = { dark: 0, white: 2, c: 9, path: 47, next: 37, next2: 53, lit: 21 }; // Launchpad-Palette
 
 export const midiAt = (r, c) => BASE + r * 5 + c;
@@ -32,14 +34,40 @@ export function createGrid({ onPad = null, flat = false, labels = true } = {}) {
   const el = h(`<div class="pgrid-wrap"><div class="pgrid"></div><div class="pgrid-foot"><button type="button" class="chip pconnect"></button><span class="pstatus"></span></div></div>`);
   const grid = el.querySelector('.pgrid');
   const pads = [];
+  /* ---- Ton läuft, solange das Pad gedrückt ist, ausser beim Sustain-Pedal ---- */
+  const sounding = new Map();
+  let sustain = false;
+  function down(r, c, hardware) {
+    const key = `${r},${c}`, m = midiAt(r, c);
+    lift(r, c, 0);
+    if (sustain) { onPad && onPad(r, c, m, pads[r][c], hardware); return; }
+    sounding.set(key, { at: performance.now(), notes: holdNotes(() => onPad && onPad(r, c, m, pads[r][c], hardware)) });
+  }
+  function lift(r, c, minMs) {
+    const key = `${r},${c}`, s = sounding.get(key);
+    if (!s) return;
+    sounding.delete(key);
+    const wait = Math.max(0, minMs - (performance.now() - s.at));
+    setTimeout(() => s.notes.forEach((n) => n.stop(DAMPER)), wait);
+  }
   for (let r = SIZE - 1; r >= 0; r--) {
     pads[r] = [];
     for (let c = 0; c < SIZE; c++) {
       const m = midiAt(r, c);
       const p = h(`<button type="button" class="ppad ${m % 12 === 0 ? 'is-c' : isNatural(m) ? 'is-white' : 'is-dark'}" data-midi="${m}"><span class="plbl"></span><span class="pfin"></span></button>`);
-      const press = (e) => { e.preventDefault(); onPad && onPad(r, c, m, p, false); };
-      p.addEventListener('pointerdown', press);
-      p.addEventListener('click', (e) => { if (e.detail === 0) press(e); }); // Tastatur
+      p.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        down(r, c, false);
+        const up = (u) => {
+          if (u.pointerId !== e.pointerId) return;
+          window.removeEventListener('pointerup', up);
+          window.removeEventListener('pointercancel', up);
+          lift(r, c, TAP_MS);
+        };
+        window.addEventListener('pointerup', up);
+        window.addEventListener('pointercancel', up);
+      });
+      p.addEventListener('click', (e) => { if (e.detail === 0) { down(r, c, false); lift(r, c, TAP_MS); } }); // Tastatur
       grid.appendChild(p);
       pads[r][c] = p;
     }
@@ -63,8 +91,9 @@ export function createGrid({ onPad = null, flat = false, labels = true } = {}) {
     led,
     press(r, c) {
       if (getCtx().state !== 'running') getCtx().resume();
-      onPad && onPad(r, c, midiAt(r, c), pads[r][c], true);
+      down(r, c, true);
     },
+    release(r, c) { lift(r, c, 0); },
   });
   const foot = el.querySelector('.pgrid-foot');
   function renderFoot() {
@@ -99,6 +128,7 @@ export function createGrid({ onPad = null, flat = false, labels = true } = {}) {
       repaint();
     },
     unlight() { for (const p of all()) p.classList.remove('lit'); repaint(); },
+    setSustain(on) { sustain = on; },
     shake(r, c) { const p = pads[r][c]; p.classList.remove('miss'); void p.offsetWidth; p.classList.add('miss'); },
     setFlat,
     setLabels,
@@ -214,7 +244,7 @@ export function drill(host, { variants, speeds = null, hand = true }) {
       need.delete(key);
       hear([m]); grid.light(m);
       if (need.size) return paintStep(seq[i]);
-      if (seq[i].cells.length > 1 && !hardware) hear(midisOf(seq[i]), 0.8);
+      if (seq[i].cells.length > 1 && !hardware) letRing(() => hear(midisOf(seq[i]), 0.8));
       i++;
       if (i < seq.length) return askNext();
       need = null;

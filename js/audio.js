@@ -24,8 +24,30 @@ const VOICES = {
  * Spielt einen Ton. time = Verzögerung in Sekunden, dur = Länge (bis Release).
  * Gibt ein Handle mit stop() zurück.
  */
-export function playNote(midi, { time = 0, dur = 0.8, vel = 0.45, type = 'piano' } = {}) {
-  if (type === 'rhodes') return playRhodes(midi, { time, dur, vel });
+export function playNote(midi, opts = {}) {
+  const held = capturing;
+  const note = (opts.type === 'rhodes' ? playRhodes : playVoice)(midi, held ? { ...opts, dur: HOLD_SECONDS } : opts);
+  held?.push(note);
+  return note;
+}
+
+/* Gehaltene Töne: Was in holdNotes angeschlagen wird, klingt, bis der Aufrufer stop() ruft (Taste losgelassen). */
+const HOLD_SECONDS = 12;
+let capturing = null;
+export function holdNotes(fn) {
+  const notes = [], before = capturing;
+  capturing = notes;
+  try { fn(); } finally { capturing = before; }
+  return notes;
+}
+/** Innerhalb von holdNotes: diese Töne klingen trotzdem ihre feste Länge aus. */
+export function letRing(fn) {
+  const before = capturing;
+  capturing = null;
+  try { fn(); } finally { capturing = before; }
+}
+
+function playVoice(midi, { time = 0, dur = 0.8, vel = 0.45, type = 'piano' } = {}) {
   const ac = getCtx();
   const v = VOICES[type] || VOICES.piano;
   const t = ac.currentTime + Math.max(0, time);
@@ -78,7 +100,7 @@ function playRhodes(midi, { time = 0, dur = 0.8, vel = 0.45 } = {}) {
   const f = midiToFreq(midi);
   const strength = Math.min(1, vel / 0.4);
   const ring = Math.max(0.6, 2.2 - (midi - 48) * 0.04); // Abklingzeit, tiefe Töne tragen länger
-  const release = 0.14;
+  const release = 0.07;
   const end = t + dur + release * 6;
 
   const out = ac.createGain();
