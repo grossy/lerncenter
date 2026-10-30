@@ -7,6 +7,32 @@ export function getCtx() {
   return ctx;
 }
 
+/* Summensignal: alle Töne laufen durch einen Limiter, damit schnelle oder grosse Akkorde nicht übersteuern. */
+let bus = null;
+function master() {
+  const ac = getCtx();
+  if (bus?.context === ac) return bus;
+  const trim = ac.createGain();
+  trim.gain.value = 0.75;
+  const limit = ac.createDynamicsCompressor();
+  limit.threshold.value = -14;
+  limit.knee.value = 10;
+  limit.ratio.value = 12;
+  limit.attack.value = 0.003;
+  limit.release.value = 0.18;
+  const clip = ac.createWaveShaper(); // fängt ab, was der Limiter durchlässt: linear bis 0.8, dann weich bis 1
+  const curve = new Float32Array(1025);
+  for (let i = 0; i < 1025; i++) {
+    const x = i / 512 - 1, a = Math.abs(x);
+    curve[i] = Math.sign(x) * (a <= 0.8 ? a : 0.8 + 0.2 * Math.tanh((a - 0.8) / 0.2));
+  }
+  clip.curve = curve;
+  clip.oversample = '2x';
+  trim.connect(limit).connect(clip).connect(ac.destination);
+  bus = trim;
+  return bus;
+}
+
 export function midiToFreq(m) {
   return 440 * Math.pow(2, (m - 69) / 12);
 }
@@ -56,7 +82,7 @@ function playVoice(midi, { time = 0, dur = 0.8, vel = 0.45, type = 'piano' } = {
   const lp = ac.createBiquadFilter();
   lp.type = 'lowpass';
   lp.frequency.value = v.cutoff;
-  out.connect(lp).connect(ac.destination);
+  out.connect(lp).connect(master());
 
   const f = midiToFreq(midi);
   const oscs = [];
@@ -109,7 +135,7 @@ function playRhodes(midi, { time = 0, dur = 0.8, vel = 0.45 } = {}) {
   lp.frequency.value = 7000;
   out.connect(lp);
   const pan = ac.createStereoPanner ? ac.createStereoPanner() : null;
-  if (pan) { lp.connect(pan); pan.connect(ac.destination); } else lp.connect(ac.destination);
+  if (pan) { lp.connect(pan); pan.connect(master()); } else lp.connect(master());
 
   const oscs = [];
   const osc = (freq) => { const o = ac.createOscillator(); o.frequency.value = freq; o.start(t); o.stop(end + 0.1); oscs.push(o); return o; };
