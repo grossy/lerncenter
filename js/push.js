@@ -4,12 +4,15 @@
 import { h, confetti } from './lesson.js';
 import { playChord } from './audio.js';
 import { noteName } from './piano.js';
+import { getCtx } from './audio.js';
+import { midiSupported, controllerState, onControllerChange, attachGrid, connectController, disconnectController, repaint } from './midi.js';
 
 export const SIZE = 8;
 const BASE = 48;
 const NATURAL = new Set([0, 2, 4, 5, 7, 9, 11]);
 const FINGER_NAME = { P: 'Pinky', R: 'Ring', M: 'Middle', I: 'Pointer', T: 'Thumb' };
 const FINGERS = { left: ['P', 'R', 'M', 'I', 'T'], right: ['T', 'I', 'M', 'R', 'P'] };
+const LED = { dark: 0, white: 2, c: 9, path: 47, next: 37, next2: 53, lit: 21 }; // Launchpad-Palette
 
 export const midiAt = (r, c) => BASE + r * 5 + c;
 export const isNatural = (m) => NATURAL.has(m % 12);
@@ -26,7 +29,7 @@ export function intervalName(semis) {
 }
 
 export function createGrid({ onPad = null, flat = false, labels = true } = {}) {
-  const el = h(`<div class="pgrid-wrap"><div class="pgrid"></div></div>`);
+  const el = h(`<div class="pgrid-wrap"><div class="pgrid"></div><div class="pgrid-foot"><button type="button" class="chip pconnect"></button><span class="pstatus"></span></div></div>`);
   const grid = el.querySelector('.pgrid');
   const pads = [];
   for (let r = SIZE - 1; r >= 0; r--) {
@@ -34,7 +37,7 @@ export function createGrid({ onPad = null, flat = false, labels = true } = {}) {
     for (let c = 0; c < SIZE; c++) {
       const m = midiAt(r, c);
       const p = h(`<button type="button" class="ppad ${m % 12 === 0 ? 'is-c' : isNatural(m) ? 'is-white' : 'is-dark'}" data-midi="${m}"><span class="plbl"></span><span class="pfin"></span></button>`);
-      const press = (e) => { e.preventDefault(); onPad && onPad(r, c, m, p); };
+      const press = (e) => { e.preventDefault(); onPad && onPad(r, c, m, p, false); };
       p.addEventListener('pointerdown', press);
       p.addEventListener('click', (e) => { if (e.detail === 0) press(e); }); // Tastatur
       grid.appendChild(p);
@@ -46,21 +49,56 @@ export function createGrid({ onPad = null, flat = false, labels = true } = {}) {
   function setLabels(on) { grid.classList.toggle('no-labels', !on); }
   setFlat(flat);
   setLabels(labels);
+  /* ---- Launchpad: Palettenfarben, wichtigste Markierung zuerst ---- */
+  function led(r, c) {
+    const k = pads[r][c].classList;
+    if (k.contains('lit')) return { color: LED.lit };
+    if (k.contains('next')) return { color: LED.next, pulse: true };
+    if (k.contains('next2')) return { color: LED.next2, pulse: true };
+    if (k.contains('path')) return { color: LED.path };
+    return { color: k.contains('is-c') ? LED.c : k.contains('is-white') ? LED.white : LED.dark };
+  }
+  attachGrid({
+    el,
+    led,
+    press(r, c) {
+      if (getCtx().state !== 'running') getCtx().resume();
+      onPad && onPad(r, c, midiAt(r, c), pads[r][c], true);
+    },
+  });
+  const foot = el.querySelector('.pgrid-foot');
+  function renderFoot() {
+    if (!midiSupported()) { foot.classList.add('hidden'); return; }
+    const { status, model, lastPad } = controllerState();
+    foot.querySelector('.pconnect').textContent = status === 'on' ? 'Disconnect' : 'Connect Launchpad';
+    const where = lastPad ? ` Last pad: row ${lastPad[0] + 1}, column ${lastPad[1] + 1} (${nameOf(midiAt(lastPad[0], lastPad[1]), flat)}).` : ' Press a pad on it.';
+    const sound = status === 'on' && getCtx().state !== 'running' ? ' Click anywhere on this page once to turn on sound.' : '';
+    foot.querySelector('.pstatus').textContent = status === 'on' ? `${model} connected.${where}${sound}` : status === 'missing' ? 'No Launchpad found. Plug it in and try again.' : status === 'denied' ? 'The browser did not allow MIDI access. Allow it in the site settings.' : '';
+  }
+  foot.querySelector('.pconnect').onclick = async () => {
+    if (controllerState().status === 'on') return disconnectController();
+    getCtx();
+    try { await connectController(); } catch { foot.querySelector('.pstatus').textContent = 'The browser did not allow MIDI access. Allow it in the site settings.'; }
+  };
+  const off = onControllerChange(() => { if (!el.isConnected && off) return off(); renderFoot(); });
+  document.addEventListener('pointerdown', renderFoot, { once: true });
+  renderFoot();
   return {
     el,
     at: (r, c) => pads[r][c],
-    mark(cells, cls) { for (const [r, c] of cells) pads[r][c].classList.add(cls); },
-    unmark(cls) { for (const p of all()) p.classList.remove(cls); },
+    mark(cells, cls) { for (const [r, c] of cells) pads[r][c].classList.add(cls); repaint(); },
+    unmark(cls) { for (const p of all()) p.classList.remove(cls); repaint(); },
     finger(r, c, text) { pads[r][c].querySelector('.pfin').textContent = text; },
     clearFingers() { for (const p of all()) p.querySelector('.pfin').textContent = ''; },
     /** Wie auf dem Gerät: leuchtet ein Ton, leuchten alle Pads mit diesem Ton. */
     light(midi, ms = 260) {
       for (const p of all()) if (+p.dataset.midi === midi) {
         p.classList.add('lit');
-        if (ms) setTimeout(() => p.classList.remove('lit'), ms);
+        if (ms) setTimeout(() => { p.classList.remove('lit'); repaint(); }, ms);
       }
+      repaint();
     },
-    unlight() { for (const p of all()) p.classList.remove('lit'); },
+    unlight() { for (const p of all()) p.classList.remove('lit'); repaint(); },
     shake(r, c) { const p = pads[r][c]; p.classList.remove('miss'); void p.offsetWidth; p.classList.add('miss'); },
     setFlat,
     setLabels,
@@ -169,14 +207,14 @@ export function drill(host, { variants, speeds = null, hand = true }) {
     $('.go').textContent = '↺ From the top';
     askNext();
   }
-  function onPad(r, c, m) {
+  function onPad(r, c, m, _p, hardware) {
     if (mode !== 'play' || !need) { hear([m]); grid.light(m); return; }
     const key = `${r},${c}`;
     if (need.has(key)) {
       need.delete(key);
       hear([m]); grid.light(m);
       if (need.size) return paintStep(seq[i]);
-      if (seq[i].cells.length > 1) hear(midisOf(seq[i]), 0.8);
+      if (seq[i].cells.length > 1 && !hardware) hear(midisOf(seq[i]), 0.8);
       i++;
       if (i < seq.length) return askNext();
       need = null;
@@ -193,7 +231,9 @@ export function drill(host, { variants, speeds = null, hand = true }) {
     read.className = 'readout pdrill-read bad';
     read.textContent = target.includes(m)
       ? `Right note, wrong pad. Stay with ${describe(seq[i])} on the marked pad.`
-      : `That was ${nameOf(m, flat())}. Next: ${describe(seq[i])}.`;
+      : target.some((t) => t % 12 === m % 12)
+        ? `That ${nameOf(m, flat())} is in another octave. Use the marked pad: ${describe(seq[i])}.`
+        : `That was ${nameOf(m, flat())}. Next: ${describe(seq[i])}.`;
   }
   /* ---- Bedienung ---- */
   $('.go').onclick = () => {

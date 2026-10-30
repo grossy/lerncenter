@@ -619,6 +619,9 @@ body.daemon .c-book { background: #f4c98f; }
 @keyframes ppad-miss { 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
 @media (prefers-reduced-motion: reduce) { .ppad.miss { animation: none; outline: 2px solid var(--bad); } }
 @media (max-width: 480px) { .ppad { font-size: .56rem; } .ppad .pfin { min-width: 15px; height: 15px; line-height: 15px; font-size: .58rem; } }
+.pgrid-foot { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: .5rem; }
+.pgrid-foot .chip { padding: .25em .8em; font-size: .85rem; }
+.pstatus { color: var(--muted); font-size: .85rem; flex: 1; min-width: 12rem; }
 .pdrill-bar { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-bottom: .75rem; }
 .pdrill .readout, .ptwo .readout, .pfind .readout { min-height: 2.6em; }
 .pdrill .controls, .ptwo .controls { flex-wrap: wrap; }

@@ -45,6 +45,7 @@ Dann <http://localhost:5173> öffnen.
 - `js/map.js` – klickbare Europakarte (SVG), `js/data/europe-map.js` – vorberechnete Länderumrisse
 - `js/pads.js` – 8×8-Pad-Grid im isomorphen Fourths-Layout (Push/Launchpad), `js/instrument.js` – Piano/Pads-Umschalter
 - `js/push.js` – Push-Raster wie auf dem Gerät (einzelne Pads, Fingerangaben) und `drill`: Griffe zuschauen oder selbst spielen
+- `js/midi.js` – Launchpad als Eingabe und Anzeige für das Push-Raster, per Web MIDI (Chrome, Edge), mit Knopf «Connect Launchpad» unter dem Raster
 - `js/widgets.js` – gemeinsame Akkord-Widgets (Loop-Player, Voicing-Schritte, Root-Wechsel, Arpeggiator)
 - `js/lessons/index.js` – Katalog der Kinder-Lektionen (Titel, Fach, Klassenstufe, Farbe, Loader)
 - `js/speech.js` – Sprachausgabe: spielt die Aufnahmen aus `daemon/audio/sv/`, die Gerätestimme nur als Notlösung
