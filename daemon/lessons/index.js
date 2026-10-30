@@ -20,6 +20,16 @@ export const catalog = [
     available: true,
     load: () => import('./constellations.js'),
   },
+  {
+    id: 'push-01-basics',
+    title: 'Push 1: Just the Basics',
+    subject: 'Music',
+    emoji: '🎛️',
+    color: 'c-adult',
+    description: 'How the 64 pads are laid out, one finger per column, one scale shape for every key, then thirds, tenths and a first go with two hands.',
+    available: true,
+    load: () => import('./push-01-basics.js'),
+  },
   ...[
     ['sv-01', 'Swedish 1: Hej!', '👋', 'Meet people: names, where you are from, where you live and what you do.', () => import('./sv-01-hej.js')],
     ['sv-02', 'Swedish 2: Ett rum, tack', '🏨', 'Book a hotel room by phone and check in. Numbers 1 to 10, and how Swedish says «the».', () => import('./sv-02-hotell.js')],

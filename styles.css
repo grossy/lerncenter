@@ -592,3 +592,48 @@ body.daemon .c-book { background: #f4c98f; }
 @media (min-width: 640px) {
   .lesson-list .row { grid-template-columns: minmax(14rem, 2fr) 3fr auto; grid-template-areas: "title desc go"; }
 }
+
+/* ---------- Push-Raster (js/push.js) ---------- */
+.pgrid-wrap { max-width: 440px; margin: 0 auto; }
+.pgrid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; background: #1a1a1a; padding: 6px; border-radius: 10px; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+.ppad {
+  position: relative; aspect-ratio: 1; border: 0; border-radius: 4px; padding: 0; font: inherit; font-size: .68rem; font-weight: 700;
+  cursor: pointer; display: flex; align-items: flex-end; justify-content: flex-start; color: #222; overflow: hidden;
+}
+.ppad .plbl { padding: 0 0 2px 4px; line-height: 1; }
+.pgrid.no-labels .plbl { visibility: hidden; }
+.ppad.is-white { background: #f1eee8; }
+.ppad.is-dark { background: #57534c; color: #d6d2ca; }
+.ppad.is-c { background: #f5a95c; }
+.ppad.path { box-shadow: inset 0 0 0 2px #7b6cff; }
+.ppad.next { box-shadow: inset 0 0 0 3px #5b4cff, 0 0 0 1px #fff; }
+.ppad.lit { background: #35d07f; color: #06301b; }
+.ppad .pfin {
+  position: absolute; top: 2px; right: 2px; min-width: 18px; height: 18px; line-height: 18px; text-align: center; border-radius: 50%;
+  font-size: .68rem; background: #5b4cff; color: #fff;
+}
+.ppad .pfin:empty { display: none; }
+.ppad.miss { animation: ppad-miss .25s; }
+@keyframes ppad-miss { 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+@media (prefers-reduced-motion: reduce) { .ppad.miss { animation: none; outline: 2px solid var(--bad); } }
+@media (max-width: 480px) { .ppad { font-size: .56rem; } .ppad .pfin { min-width: 15px; height: 15px; line-height: 15px; font-size: .58rem; } }
+.pdrill-bar { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-bottom: .75rem; }
+.pdrill .readout, .ptwo .readout, .pfind .readout { min-height: 2.6em; }
+.pdrill .controls, .ptwo .controls { flex-wrap: wrap; }
+.pfind-ask { text-align: center; font-size: 1.25rem; font-weight: 700; margin: .25rem 0 .75rem; }
+.pshape-key { text-align: center; margin-bottom: .5rem; }
+.pshape .controls { justify-content: center; flex-wrap: wrap; margin-bottom: .75rem; }
+.ptwo .bars { margin-bottom: .75rem; }
+.rock-svg { display: block; width: 100%; max-width: 420px; margin: 0 auto; }
+.rock-svg text { font-size: 13px; font-weight: 700; text-anchor: middle; }
+.rock-pad rect { fill: var(--surface-2); stroke: var(--border); }
+.rock-pad text { fill: var(--text); }
+.rock-pad.on rect { fill: #35d07f; stroke: #35d07f; }
+.rock-pad.on text { fill: #06301b; }
+.rock-hand { transform-box: view-box; transform-origin: 130px 30px; transition: transform .12s ease-out; }
+.rock-finger { transition: transform .12s ease-out; }
+.rock-finger rect, .rock-palm { fill: #e6b89c; stroke: #a9745a; stroke-width: 1; }
+.rock-finger text { fill: #5a3524; }
+.ppractice-row { display: flex; align-items: flex-start; gap: .6rem; padding: .55rem 0; border-bottom: 1px solid var(--border); cursor: pointer; }
+.ppractice-row input { margin-top: .25rem; width: 1.1rem; height: 1.1rem; accent-color: var(--accent); }
+.ppractice-row .sub { color: var(--muted); font-size: .9rem; }

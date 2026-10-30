@@ -13,6 +13,7 @@ Engine, Styles und Komponenten, haben aber eigene Startseiten, Kataloge und URLs
 
 - **One Vibe, Two Colours** (Music) – Am11 → Fmaj9♯11 und Trugschluss
 - **Harmonic Constellations** (Music) – Arpeggiator, Voice Leading, verschachtelte Progression in c-Moll
+- **Push 1: Just the Basics** (Music) – nach einem Tutorial von JNTHN STEIN: Raster, ein Finger pro Spalte, Dur-Tonleiter, Form in jeder Tonart, Terzen, Dezimen, zwei Hände
 - **Swedish 1–10** (Swedish) – zehn Alltagssituationen, jeweils Wörter → Sätze → Konversation, mit Sprachausgabe: Hej!, Ett rum tack, Fika, Vart ska du?, I affären, Utflykt, Simma och basta, Hitta vägen, Ska vi ses?, Grattis!
 - **Catching the Big Fish** (Books) – David Lynch: Ideen als Fische, Fragmente, Red Room, vier Stunden für eine, dazu eine kritische Einordnung und Schreibaufgaben
 - **Metaphysical Order in Sufism** (Books) – Samer Akkach: Präsenz, Punkt und Kreis, sieben Seinszustände, vier Bedingungen des Schaffens, Buchstaben, kritische Einordnung und Schreibaufgaben
@@ -42,6 +43,7 @@ Dann <http://localhost:5173> öffnen.
 - `js/lessons/terzen.js` – Inhalt und Widgets der Terzen-Lektion
 - `js/map.js` – klickbare Europakarte (SVG), `js/data/europe-map.js` – vorberechnete Länderumrisse
 - `js/pads.js` – 8×8-Pad-Grid im isomorphen Fourths-Layout (Push/Launchpad), `js/instrument.js` – Piano/Pads-Umschalter
+- `js/push.js` – Push-Raster wie auf dem Gerät (einzelne Pads, Fingerangaben) und `drill`: Griffe zuschauen oder selbst spielen
 - `js/widgets.js` – gemeinsame Akkord-Widgets (Loop-Player, Voicing-Schritte, Root-Wechsel, Arpeggiator)
 - `js/lessons/index.js` – Katalog der Kinder-Lektionen (Titel, Fach, Klassenstufe, Farbe, Loader)
 - `js/speech.js` – Sprachausgabe: spielt die Aufnahmen aus `daemon/audio/sv/`, die Gerätestimme nur als Notlösung
@@ -63,6 +65,8 @@ Der Piano/Pads-Umschalter (`createInstrument` mit `pads`-Option) ist nur für Da
 das Prinzip selbst zeigt, zum Beispiel wenn eine Grösse direkt von einer anderen abhängt. Nicht als Selbstzweck.
 
 **Bücher (Daemon, Fach `Books`):** Datei in `daemon/lessons/` mit den Bausteinen aus `js/book.js`, Karte mit `color: 'c-book'`. Ideen in eigenen Worten nacherzählen, höchstens ein kurzes Zitat pro Lektion, keine längeren Passagen. Jede Lektion trennt, was man anwenden kann, von Behauptungen, die umstritten sind, und enthält Aufgaben zum eigenen Arbeiten.
+
+**Video-Tutorials (Daemon, Fach `Music`):** Video und Transkript liegen nur lokal in `dev import/`. Griffe aus Einzelbildern ablesen, Ideen in eigenen Worten nacherzählen, höchstens ein kurzes Zitat, kein Ton und kein Bild aus dem Video im Repo. Was nicht aus dem Video stammt, in der Lektion kennzeichnen.
 
 ## Schwedischkurs und Urheberrecht
 
