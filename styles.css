@@ -502,3 +502,32 @@ body.daemon .c-book { background: #f4c98f; }
 .note-text { white-space: pre-wrap; }
 .note-row.empty .note-text { color: var(--muted); font-style: italic; }
 @media (max-width: 560px) { .slot { height: 36px; } .quiz .choices .btn.big { font-size: 1rem; padding: .8em .6em; } }
+.sym { width: 100%; max-height: 42vh; display: block; }
+.sym-line { fill: none; stroke: var(--text); stroke-width: 2; }
+.sym-line.thick { stroke-width: 7; stroke-linecap: round; }
+.sym-thin { stroke: var(--muted); stroke-width: 1; opacity: .7; }
+.sym-fill { fill: var(--text); }
+.sym-accent { fill: var(--accent); }
+.step-bar { margin-top: 1rem; }
+.state-list { display: grid; gap: .3rem; margin-top: 1rem; }
+.state-row { font: inherit; color: var(--text); background: var(--surface-2); border: 2px solid transparent; border-radius: 10px; padding: .45rem .7rem; display: flex; gap: .7rem; align-items: center; text-align: left; cursor: pointer; }
+.state-row.selected { border-color: var(--accent); }
+.state-n { font-weight: 700; color: var(--accent); min-width: 1.1em; }
+.state-name { font-weight: 600; }
+.turn-hint { margin-top: 0; }
+.dir-line { stroke: var(--muted); stroke-width: 3; stroke-linecap: round; opacity: .55; }
+.dir-line.on { stroke: var(--accent); stroke-width: 6; opacity: 1; }
+.dir-wrap .chips { margin-top: .75rem; }
+.letter-stage { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: center; }
+.letter-stage .letter-svg { flex: 1 1 240px; width: auto; min-width: 0; }
+.glyph { font-size: 5rem; line-height: 1.2; min-width: 6rem; text-align: center; color: var(--accent); }
+.nest { fill: none; stroke: var(--muted); stroke-width: 2; opacity: .6; transition: opacity .25s; }
+.nest.on { stroke: var(--accent); stroke-width: 4; opacity: 1; }
+.nest[data-i="5"] { fill: var(--muted); }
+.nest[data-i="5"].on { fill: var(--accent); }
+.nest.gone { opacity: .12; }
+.vowel-wrap { text-align: center; }
+.vowel-wrap .chips { justify-content: center; }
+.vowel-glyph { font-size: clamp(4rem, 14vw, 6rem); }
+.vowel-latin { font-weight: 700; font-size: 1.2rem; margin-bottom: .75rem; letter-spacing: .03em; }
+.page-white { background: #fbfbf7; border-radius: 12px; --text: #161616; --muted: #666; }

@@ -42,6 +42,16 @@ export const catalog = [
     available: true,
     load: () => import('./big-fish.js'),
   },
+  {
+    id: 'sufi-order',
+    title: 'Metaphysical Order in Sufism',
+    subject: 'Books',
+    emoji: '⭕',
+    color: 'c-book',
+    description: 'How Sufi thinkers mapped being with points, circles and letters: presence, the Unity of Being, seven states and four conditions for making anything.',
+    available: true,
+    load: () => import('./sufi-order.js'),
+  },
 ];
 
 export const lessons = Object.fromEntries(catalog.filter((l) => l.load).map((l) => [l.id, l.load]));
