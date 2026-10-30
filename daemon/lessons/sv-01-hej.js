@@ -1,0 +1,91 @@
+// Lesson (en/sv): Swedish 1 – meeting people
+import { languageLesson } from '../../js/language.js';
+
+export default languageLesson({
+  id: 'sv-01', n: 1, courseTitle: 'Swedish 1: Hej!',
+  title: 'Hej! Meeting people',
+  scene: `<p>Noah has just arrived in Gothenburg and goes to a <span lang="sv">språkcafé</span>, an evening where locals and newcomers talk over coffee. By the end of this lesson you can hold that first conversation: names, where you are from, where you live and what you do.</p>`,
+  sounds: {
+    title: 'The first sounds',
+    body: `<p>Swedish has three extra letters, and they are real vowels of their own. <span lang="sv">Å</span> is close to the «aw» in <em>more</em>, <span lang="sv">ä</span> to the «e» in <em>bed</em>, <span lang="sv">ö</span> to the «ur» in <em>burn</em>. A <span lang="sv">j</span> always sounds like the «y» in <em>yes</em>, and a long <span lang="sv">o</span> usually sounds like «oo».</p>`,
+    items: [['två', 'two', 'tvaw'], ['är', 'am, is, are', 'air'], ['öl', 'beer', 'url'], ['jag', 'I', 'yaag'], ['ja', 'yes', 'yaa'], ['bor', 'live', 'boor']],
+  },
+  words: [
+    { group: 'Hello and goodbye', items: [['hej', 'hello', 'hay'], ['hej då', 'goodbye', 'hay daw'], ['tack', 'thanks'], ['ja', 'yes', 'yaa'], ['nej', 'no', 'nay'], ['ursäkta', 'excuse me', 'oor-shek-ta'], ['oj', 'oh!', 'oy']] },
+    { group: 'People', items: [['jag', 'I', 'yaag'], ['du', 'you'], ['han', 'he'], ['hon', 'she', 'hoon'], ['vi', 'we', 'vee']] },
+    { group: 'Question words', items: [['vad', 'what', 'vaad'], ['var', 'where', 'vaar'], ['vem', 'who']] },
+    { group: 'Verbs', items: [['heter', 'am called, is called'], ['är', 'am, is, are', 'air'], ['bor', 'live', 'boor'], ['kommer', 'come'], ['jobbar', 'work', 'yob-bar'], ['studerar', 'study'], ['talar', 'speak']] },
+    { group: 'Names, jobs, languages', items: [['ett namn', 'a name'], ['ett efternamn', 'a surname'], ['svenska', 'Swedish'], ['engelska', 'English'], ['en lärare', 'a teacher'], ['en kock', 'a cook'], ['en läkare', 'a doctor'], ['en student', 'a student']] },
+  ],
+  sentences: [
+    ['Vad heter du?', "What's your name?"],
+    ['Jag heter Noah.', 'My name is Noah.'],
+    ['Var kommer du ifrån?', 'Where are you from?'],
+    ['Jag kommer från Schweiz.', 'I come from Switzerland.'],
+    ['Var bor du?', 'Where do you live?'],
+    ['Jag bor i Göteborg.', 'I live in Gothenburg.'],
+    ['Vad jobbar du med?', 'What do you do for work?'],
+    ['Jag är lärare.', "I'm a teacher."],
+    ['Vad studerar du?', 'What are you studying?'],
+    ['Jag studerar svenska.', "I'm studying Swedish."],
+    ['Talar du engelska?', 'Do you speak English?'],
+    ['Trevligt att träffas!', 'Nice to meet you!'],
+  ],
+  patternsTitle: 'swap the parts',
+  patternsBody: `<p>Two pieces of good news. A Swedish verb has the <strong>same form for every person</strong>: <span lang="sv">jag är, du är, hon är, vi är</span>. And you <strong>drop the article before a job</strong>: <span lang="sv">Jag är lärare</span>, literally «I am teacher».</p>
+    <p>Nouns are either <span lang="sv">en</span> words or <span lang="sv">ett</span> words. There is no reliable rule, so learn the article with the noun.</p>`,
+  patterns: [
+    { frame: 'Jag heter {}.', en: 'My name is {}.', options: [['Noah', 'Noah'], ['Elin', 'Elin'], ['Johan', 'Johan']] },
+    { frame: 'Jag kommer från {}.', en: 'I come from {}.', options: [['Schweiz', 'Switzerland'], ['Tyskland', 'Germany'], ['England', 'England'], ['Sverige', 'Sweden']] },
+    { frame: 'Jag är {}.', en: "I'm a {}.", options: [['lärare', 'teacher'], ['kock', 'cook'], ['läkare', 'doctor'], ['student', 'student']] },
+  ],
+  build: [
+    ['Jag bor i Göteborg.', 'I live in Gothenburg.'],
+    ['Var kommer du ifrån?', 'Where are you from?'],
+    ['Vad jobbar du med?', 'What do you do for work?'],
+    ['Jag studerar svenska och engelska.', 'I study Swedish and English.'],
+    ['Talar du engelska?', 'Do you speak English?'],
+    ['Han är kock i Göteborg.', 'He is a cook in Gothenburg.'],
+  ],
+  talks: [
+    {
+      title: 'at the språkcafé',
+      scene: `<p>Elin notices someone she has not seen before and goes over to say hello.</p>`,
+      cast: ['Elin', 'Noah'],
+      lines: [
+        ['Elin', 'Hej! Är du ny här?', 'Hi! Are you new here?'],
+        ['Noah', 'Ja. Hej! Jag heter Noah.', 'Yes. Hi! My name is Noah.'],
+        ['Elin', 'Trevligt att träffas! Jag heter Elin.', "Nice to meet you! I'm Elin."],
+        ['Noah', 'Trevligt! Bor du i Göteborg?', 'Nice to meet you! Do you live in Gothenburg?'],
+        ['Elin', 'Ja, här i Haga. Var kommer du ifrån?', 'Yes, here in Haga. Where are you from?'],
+        ['Noah', 'Jag kommer från Schweiz.', 'I come from Switzerland.'],
+        ['Elin', 'Oj, vad roligt! Talar du svenska?', 'Oh, how nice! Do you speak Swedish?'],
+        ['Noah', 'Bara lite. Jag studerar svenska nu.', "Only a little. I'm studying Swedish now."],
+        ['Elin', 'Det går ju jättebra!', "You're doing really well!"],
+      ],
+    },
+    {
+      title: 'meeting Johan',
+      scene: `<p>Elin's brother Johan comes over with a tray of coffee, and the talk turns to work.</p>`,
+      cast: ['Elin', 'Johan', 'Noah'],
+      lines: [
+        ['Elin', 'Noah, det här är Johan. Han är min bror.', 'Noah, this is Johan. He is my brother.'],
+        ['Johan', 'Hej, Noah! Vad jobbar du med?', 'Hi, Noah! What do you do for work?'],
+        ['Noah', 'Jag är musiker. Och du?', "I'm a musician. And you?"],
+        ['Johan', 'Jag är kock. Elin är lärare.', "I'm a cook. Elin is a teacher."],
+        ['Noah', 'Vad undervisar du i, Elin?', 'What do you teach, Elin?'],
+        ['Elin', 'Engelska. Men jag studerar spanska på kvällarna.', 'English. But I study Spanish in the evenings.'],
+        ['Noah', 'Vad bra! Oj, nu måste jag gå.', 'Great! Oh, I have to go now.'],
+        ['Johan', 'Vi ses nästa vecka?', 'See you next week?'],
+        ['Noah', 'Ja, gärna. Hej då!', "Yes, I'd like that. Goodbye!"],
+        ['Elin', 'Hej då, Noah!', 'Goodbye, Noah!'],
+      ],
+    },
+  ],
+  notes: [
+    '<strong>One verb form for everyone:</strong> <span lang="sv">jag är, du är, vi är</span>.',
+    '<strong>No article before a job:</strong> <span lang="sv">Jag är kock.</span>',
+    '<strong>Questions start with the question word,</strong> then the verb: <span lang="sv">Var bor du?</span>',
+    '<strong><span lang="sv">Hej</span> works almost everywhere,</strong> from a shop to a meeting.',
+  ],
+});

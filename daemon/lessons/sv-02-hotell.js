@@ -1,0 +1,91 @@
+// Lesson (en/sv): Swedish 2 – at the hotel
+import { languageLesson } from '../../js/language.js';
+
+export default languageLesson({
+  id: 'sv-02', n: 2, courseTitle: 'Swedish 2: Ett rum, tack',
+  title: 'Ett rum, tack: at the hotel',
+  scene: `<p>Noah needs somewhere to stay. In this lesson you book a room by phone, then check in. You also get the numbers from one to ten, and the Swedish way of saying «the».</p>`,
+  sounds: {
+    title: 'Long or short?',
+    body: `<p>Vowel length changes meaning in Swedish. A double consonant makes the vowel before it <strong>short</strong>; a single consonant usually leaves it <strong>long</strong>. Listen to <span lang="sv">glas</span> and <span lang="sv">glass</span>: one is a glass, the other is ice cream.</p>`,
+    items: [['ett glas', 'a glass', 'glaas'], ['en glass', 'an ice cream', 'glass'], ['ett tak', 'a roof', 'taak'], ['tack', 'thanks', 'tack'], ['vit', 'white', 'veet'], ['vitt', 'white (ett word)', 'vit']],
+  },
+  words: [
+    { group: 'At the hotel', items: [['ett hotell', 'a hotel'], ['ett rum', 'a room', 'room'], ['en nyckel', 'a key'], ['en natt', 'a night'], ['en säng', 'a bed'], ['en dusch', 'a shower'], ['en frukost', 'a breakfast'], ['en våning', 'a floor, a storey', 'vaw-ning'], ['ledig', 'free, vacant', 'lay-dig']] },
+    { group: 'Time of day', items: [['idag', 'today', 'ee-daag'], ['imorgon', 'tomorrow', 'ee-mor-ron'], ['ikväll', 'tonight', 'ee-kvell'], ['god morgon', 'good morning', 'goo mor-ron'], ['god kväll', 'good evening', 'goo kvell'], ['god natt', 'good night', 'goo natt']] },
+    { group: 'Being polite', items: [['varsågod', 'here you are', 'var-sho-good'], ['förlåt', 'sorry, pardon', 'fur-lawt'], ['tack så mycket', 'thanks a lot', 'tack saw mü-keh'], ['ett ögonblick', 'one moment']] },
+    { group: 'One to ten', items: [['ett', 'one'], ['två', 'two', 'tvaw'], ['tre', 'three', 'tray'], ['fyra', 'four', 'fü-ra'], ['fem', 'five'], ['sex', 'six'], ['sju', 'seven', 'hwoo'], ['åtta', 'eight', 'ot-ta'], ['nio', 'nine', 'nee-oo'], ['tio', 'ten', 'tee-oo']] },
+  ],
+  sentences: [
+    ['Har ni ett ledigt rum?', 'Do you have a room available?'],
+    ['Jag vill boka ett rum.', "I'd like to book a room."],
+    ['Hur många nätter?', 'How many nights?'],
+    ['Tre nätter, tack.', 'Three nights, please.'],
+    ['Vad kostar det?', 'How much does it cost?'],
+    ['Ingår frukost?', 'Is breakfast included?'],
+    ['Jag har bokat ett rum.', 'I have booked a room.'],
+    ['Förlåt, vad var namnet?', 'Sorry, what was the name?'],
+    ['Här är nyckeln.', "Here's the key."],
+    ['När är frukosten?', 'When is breakfast?'],
+    ['Rummet är på andra våningen.', 'The room is on the second floor.'],
+    ['Ett ögonblick, tack.', 'One moment, please.'],
+  ],
+  patternsTitle: 'questions and «the»',
+  patternsBody: `<p><strong>«The» is an ending.</strong> <span lang="sv">En nyckel</span> is a key, <span lang="sv">nyckeln</span> is the key. <span lang="sv">Ett rum</span> is a room, <span lang="sv">rummet</span> is the room.</p>
+    <p><strong>A yes/no question starts with the verb:</strong> <span lang="sv">Ni har ett rum</span> becomes <span lang="sv">Har ni ett rum?</span> No «do» needed. Note also the plural: <span lang="sv">en natt</span>, <span lang="sv">två nätter</span>.</p>`,
+  patterns: [
+    { frame: 'Här är {}.', en: "Here's {}.", options: [['nyckeln', 'the key'], ['rummet', 'the room'], ['frukosten', 'the breakfast'], ['duschen', 'the shower']] },
+    { frame: 'Jag stannar {} nätter.', en: "I'm staying {} nights.", options: [['två', 'two'], ['tre', 'three'], ['fem', 'five'], ['tio', 'ten']] },
+    { frame: 'Har ni {}?', en: 'Do you have {}?', options: [['ett ledigt rum', 'a room available'], ['frukost', 'breakfast'], ['en stor säng', 'a big bed']] },
+  ],
+  build: [
+    ['Har ni ett ledigt rum?', 'Do you have a room available?'],
+    ['Jag har bokat ett rum.', 'I have booked a room.'],
+    ['Här är nyckeln.', "Here's the key."],
+    ['När är frukosten?', 'When is breakfast?'],
+    ['Rummet är på andra våningen.', 'The room is on the second floor.'],
+    ['Jag vill boka ett rum.', "I'd like to book a room."],
+  ],
+  talks: [
+    {
+      title: 'booking by phone',
+      scene: `<p>Noah calls a small hotel near the harbour to book for the weekend.</p>`,
+      cast: ['Reception', 'Noah'],
+      lines: [
+        ['Reception', 'Hotell Hamnen, god kväll!', 'Hotel Hamnen, good evening!'],
+        ['Noah', 'God kväll. Jag vill boka ett rum.', "Good evening. I'd like to book a room."],
+        ['Reception', 'Javisst. Vilken dag kommer du?', 'Of course. Which day are you coming?'],
+        ['Noah', 'På fredag.', 'On Friday.'],
+        ['Reception', 'Och hur många nätter?', 'And how many nights?'],
+        ['Noah', 'Tre nätter, tack.', 'Three nights, please.'],
+        ['Reception', 'Ett ögonblick. Ja, vi har ett enkelrum.', 'One moment. Yes, we have a single room.'],
+        ['Noah', 'Vad kostar det?', 'How much does it cost?'],
+        ['Reception', 'Niohundra kronor per natt, med frukost.', 'Nine hundred kronor per night, with breakfast.'],
+        ['Noah', 'Det låter bra. Tack!', 'That sounds good. Thanks!'],
+      ],
+    },
+    {
+      title: 'checking in',
+      scene: `<p>Friday evening. Noah arrives with his bag, and the lobby is so noisy that the receptionist has to ask twice.</p>`,
+      cast: ['Reception', 'Noah'],
+      lines: [
+        ['Reception', 'God kväll och välkommen!', 'Good evening and welcome!'],
+        ['Noah', 'Hej! Jag har bokat ett rum. Noah Keller.', 'Hi! I have booked a room. Noah Keller.'],
+        ['Reception', 'Förlåt, vad var namnet?', 'Sorry, what was the name?'],
+        ['Noah', 'Keller. K, e, l, l, e, r.', 'Keller. K, e, l, l, e, r.'],
+        ['Reception', 'Tack. Tre nätter, eller hur?', 'Thanks. Three nights, right?'],
+        ['Noah', 'Ja, det stämmer. När är frukosten?', "Yes, that's right. When is breakfast?"],
+        ['Reception', 'Från sju till tio.', 'From seven to ten.'],
+        ['Noah', 'Bra. Var är rummet?', 'Good. Where is the room?'],
+        ['Reception', 'Rum åtta, på andra våningen. Varsågod, här är nyckeln.', "Room eight, on the second floor. Here you are, here's the key."],
+        ['Noah', 'Tack så mycket. God natt!', 'Thanks a lot. Good night!'],
+      ],
+    },
+  ],
+  notes: [
+    '<strong>«The» is an ending:</strong> <span lang="sv">rum → rummet, nyckel → nyckeln</span>.',
+    '<strong>Yes/no questions start with the verb:</strong> <span lang="sv">Har ni …?</span>',
+    '<strong>Double consonant, short vowel:</strong> <span lang="sv">glas</span> versus <span lang="sv">glass</span>.',
+    '<strong><span lang="sv">Sju</span> is the hard one:</strong> a breathy sound with no English match. Keep copying it.',
+  ],
+});

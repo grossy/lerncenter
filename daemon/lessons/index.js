@@ -20,6 +20,18 @@ export const catalog = [
     available: true,
     load: () => import('./constellations.js'),
   },
+  ...[
+    ['sv-01', 'Swedish 1: Hej!', '👋', 'Meet people: names, where you are from, where you live and what you do.', () => import('./sv-01-hej.js')],
+    ['sv-02', 'Swedish 2: Ett rum, tack', '🏨', 'Book a hotel room by phone and check in. Numbers 1 to 10, and how Swedish says «the».', () => import('./sv-02-hotell.js')],
+    ['sv-03', 'Swedish 3: Fika', '☕', 'Order coffee and buns, have lunch, pay the bill. Numbers 11 to 20.', () => import('./sv-03-fika.js')],
+    ['sv-04', 'Swedish 4: Vart ska du?', '🚋', 'Taxi and tram, where versus where to, and telling the time with a working clock.', () => import('./sv-04-resa.js')],
+    ['sv-05', 'Swedish 5: I affären', '🛒', 'Find things in a shop, try on a jacket, and build prices of any size.', () => import('./sv-05-handla.js')],
+    ['sv-06', 'Swedish 6: Utflykt', '🎡', 'A funfair and an island trip: suggest, refuse and compare. The verb comes second.', () => import('./sv-06-utflykt.js')],
+    ['sv-07', 'Swedish 7: Simma och basta', '🧖', 'Phone calls, the pool and the sauna. Say what you have and what you do not.', () => import('./sv-07-simma.js')],
+    ['sv-08', 'Swedish 8: Hitta vägen', '🧭', 'Say what hurts, ask the way, and understand the directions you get back.', () => import('./sv-08-vagen.js')],
+    ['sv-09', 'Swedish 9: Ska vi ses?', '🎶', 'A night out and plans for Saturday. Three Swedish verbs for «think».', () => import('./sv-09-ut.js')],
+    ['sv-10', 'Swedish 10: Grattis!', '🎂', 'A birthday dinner: family, weather and everything you say at a Swedish table.', () => import('./sv-10-middag.js')],
+  ].map(([id, title, emoji, description, load]) => ({ id, title, subject: 'Swedish', emoji, color: 'c-adult', description, available: true, load })),
 ];
 
 export const lessons = Object.fromEntries(catalog.filter((l) => l.load).map((l) => [l.id, l.load]));

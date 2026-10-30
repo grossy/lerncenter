@@ -13,6 +13,7 @@ Engine, Styles und Komponenten, haben aber eigene Startseiten, Kataloge und URLs
 
 - **One Vibe, Two Colours** (Music) – Am11 → Fmaj9♯11 und Trugschluss
 - **Harmonic Constellations** (Music) – Arpeggiator, Voice Leading, verschachtelte Progression in c-Moll
+- **Swedish 1–10** (Swedish) – zehn Alltagssituationen, jeweils Wörter → Sätze → Konversation, mit Sprachausgabe: Hej!, Ett rum tack, Fika, Vart ska du?, I affären, Utflykt, Simma och basta, Hitta vägen, Ska vi ses?, Grattis!
 
 GitHub Pages deployt automatisch bei jedem Push auf `main`.
 
@@ -40,6 +41,9 @@ Dann <http://localhost:5173> öffnen.
 - `js/pads.js` – 8×8-Pad-Grid im isomorphen Fourths-Layout (Push/Launchpad), `js/instrument.js` – Piano/Pads-Umschalter
 - `js/widgets.js` – gemeinsame Akkord-Widgets (Loop-Player, Voicing-Schritte, Root-Wechsel, Arpeggiator)
 - `js/lessons/index.js` – Katalog der Kinder-Lektionen (Titel, Fach, Klassenstufe, Farbe, Loader)
+- `js/speech.js` – Sprachausgabe: spielt die Aufnahmen aus `daemon/audio/sv/`, die Gerätestimme nur als Notlösung
+- `tools/build_speech.py`, `tools/speech_phrases.mjs` – erzeugen die Aufnahmen mit Piper; das Korrekturwörterbuch für falsch betonte Wörter steht im Skript
+- `js/language.js` – Sprachkurs-Baustein: `languageLesson(daten)` baut daraus die Seiten Wörter → Sätze → Konversation mit Rollenspiel
 
 ## Neue Lektion
 
@@ -53,6 +57,14 @@ Der Piano/Pads-Umschalter (`createInstrument` mit `pads`-Option) ist nur für Da
 
 **Interaktive Regler** («Tweak Bars», wie die Schieberegler in der Flächen-Lektion) nur dort einsetzen, wo das Herumspielen
 das Prinzip selbst zeigt, zum Beispiel wenn eine Grösse direkt von einer anderen abhängt. Nicht als Selbstzweck.
+
+## Schwedischkurs und Urheberrecht
+
+Der Kurs folgt den zehn Situationen von *Teach Yourself Swedish Conversation*, die Dialoge sind aber eigene Texte. Dieses Repo und die Seite sind
+öffentlich: Buchtexte und CD-Aufnahmen gehören nicht hinein. Die Originaldateien liegen nur lokal in `dev import/` (in `.gitignore`), und die Seite «From the CD»
+erscheint nur auf localhost und spielt die Abschnitte aus `dev import/tracks/`.
+
+Die Aufnahmen in `daemon/audio/sv/` sind synthetisch, gesprochen von der Stimme [Alma](https://huggingface.co/yeagersthlm/piper-voice-sv-alma) (Piper, CC BY 4.0, trainiert auf dem NST-Datensatz von Språkbanken). Nach Textänderungen in einer Lektion `tools/build_speech.py` neu laufen lassen: Es erzeugt fehlende Dateien und löscht verwaiste.
 
 ## Kartendaten
 

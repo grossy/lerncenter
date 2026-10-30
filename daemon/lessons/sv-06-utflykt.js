@@ -1,0 +1,92 @@
+// Lesson (en/sv): Swedish 6 – funfair and archipelago
+import { languageLesson } from '../../js/language.js';
+
+export default languageLesson({
+  id: 'sv-06', n: 6, courseTitle: 'Swedish 6: Utflykt',
+  title: 'Utflykt: a day out',
+  scene: `<p>A day at Liseberg, the big funfair in the middle of Gothenburg, then a boat into the southern archipelago, where no cars are allowed. You learn to make suggestions, agree and refuse, compare things, and you meet the most important rule of Swedish word order.</p>`,
+  sounds: {
+    title: 'The Swedish u and y',
+    body: `<p>Two vowels have no English equal. For <span lang="sv">u</span>, say «oo» with your lips pushed forward and only a small gap. For <span lang="sv">y</span>, say «ee» with your lips rounded, close to a German <span lang="sv">ü</span> but tighter.</p>`,
+    items: [['du', 'you', 'doo'], ['ett hus', 'a house', 'hoos'], ['ute', 'outside', 'oo-teh'], ['ny', 'new', 'nü'], ['en by', 'a village', 'bü'], ['flyga', 'to fly', 'flü-ga']],
+  },
+  words: [
+    { group: 'At the funfair', items: [['ett nöjesfält', 'a funfair', 'nur-yes-felt'], ['en berg- och dalbana', 'a rollercoaster', 'bairy aw daal-baa-na'], ['ett pariserhjul', 'a Ferris wheel', 'pa-ree-ser-yool'], ['en karusell', 'a merry-go-round'], ['en våffla', 'a waffle', 'vof-la'], ['en kö', 'a queue', 'chur'], ['högt', 'high'], ['läskigt', 'scary', 'les-kit'], ['farligt', 'dangerous', 'faar-lit']] },
+    { group: 'On the water', items: [['en båt', 'a boat', 'bawt'], ['en ö', 'an island', 'ur'], ['skärgården', 'the archipelago', 'hwair-gor-den'], ['en hamn', 'a harbour'], ['ett hav', 'a sea'], ['en strand', 'a beach'], ['kallt', 'cold']] },
+    { group: 'Comparing', items: [['roligt', 'fun', 'roo-lit'], ['roligare', 'more fun'], ['billigare', 'cheaper'], ['närmare', 'closer'], ['bäst', 'best'], ['än', 'than']] },
+    { group: 'Little words', items: [['först', 'first', 'furst'], ['sedan', 'then', 'sen'], ['istället', 'instead'], ['kanske', 'maybe', 'kan-hweh'], ['aldrig', 'never', 'al-dri'], ['vågar', 'dare', 'vaw-gar'], ['bjuder', 'treat, invite', 'byoo-der']] },
+  ],
+  sentences: [
+    ['Vad ska vi göra idag?', 'What shall we do today?'],
+    ['Ska vi åka till Liseberg?', 'Shall we go to Liseberg?'],
+    ['Ja, det gör vi!', "Yes, let's do that!"],
+    ['Vågar du?', 'Do you dare?'],
+    ['Nej, det vågar jag inte.', "No, I don't dare."],
+    ['Det är inte farligt.', "It's not dangerous."],
+    ['Först tar vi en våffla.', "First we'll have a waffle."],
+    ['Var köper man biljetter?', 'Where do you buy tickets?'],
+    ['Har du varit i skärgården?', 'Have you been to the archipelago?'],
+    ['Nej, aldrig.', 'No, never.'],
+    ['När går båten?', 'When does the boat leave?'],
+    ['Båten är billigare än taxin.', 'The boat is cheaper than the taxi.'],
+  ],
+  patternsTitle: 'the verb comes second',
+  patternsBody: `<p><strong>The verb is always the second element.</strong> Start a sentence with something other than the subject, and the subject moves behind the verb: <span lang="sv">Vi åker idag</span>, but <span lang="sv">Idag åker vi</span>. English says «today we go», Swedish says «today go we».</p>
+    <p><strong><span lang="sv">Man</span></strong> means «one» or «you» in general: <span lang="sv">Var köper man biljetter?</span> For comparing, add <span lang="sv">-are</span> and <span lang="sv">än</span>.</p>`,
+  patterns: [
+    { frame: '{} åker vi till Liseberg.', en: '{} we go to Liseberg.', options: [['Idag', 'Today'], ['Imorgon', 'Tomorrow'], ['Sedan', 'Then'], ['Kanske', 'Maybe']] },
+    { frame: 'Båten är {} än bussen.', en: 'The boat is {} than the bus.', options: [['roligare', 'more fun'], ['billigare', 'cheaper'], ['långsammare', 'slower'], ['bättre', 'better']] },
+    { frame: 'Var köper man {}?', en: 'Where do you buy {}?', options: [['biljetter', 'tickets'], ['glass', 'ice cream'], ['en våffla', 'a waffle']] },
+  ],
+  build: [
+    ['Ska vi åka till Liseberg?', 'Shall we go to Liseberg?'],
+    ['Idag åker vi till Liseberg.', 'Today we go to Liseberg.'],
+    ['Först tar vi en våffla.', "First we'll have a waffle."],
+    ['Nej, det vågar jag inte.', "No, I don't dare."],
+    ['Har du varit i skärgården?', 'Have you been to the archipelago?'],
+    ['Båten är billigare än taxin.', 'The boat is cheaper than the taxi.'],
+  ],
+  talks: [
+    {
+      title: 'the big wheel',
+      scene: `<p>Noah wants to go up. Elin is not so sure.</p>`,
+      cast: ['Elin', 'Noah'],
+      lines: [
+        ['Elin', 'Titta, där är Liseberg! Vad vill du göra först?', 'Look, there is Liseberg! What do you want to do first?'],
+        ['Noah', 'Pariserhjulet! Är det högt?', 'The Ferris wheel! Is it high?'],
+        ['Elin', 'Ja, mycket högt. Vågar du?', 'Yes, very high. Do you dare?'],
+        ['Noah', 'Ja, det vågar jag. Och du?', 'Yes, I do. And you?'],
+        ['Elin', 'Nej, jag tar en våffla istället.', "No, I'll have a waffle instead."],
+        ['Noah', 'Kom igen! Det är inte farligt.', "Come on! It's not dangerous."],
+        ['Elin', 'Okej, men sedan bjuder du på våfflan.', "Okay, but then the waffle's on you."],
+        ['Noah', 'Det är lugnt. Var köper man biljetter?', 'No problem. Where do you buy tickets?'],
+        ['Elin', 'Här borta, i kassan.', 'Over here, at the ticket desk.'],
+        ['Noah', 'Nu kör vi!', "Here we go!"],
+      ],
+    },
+    {
+      title: 'which island?',
+      scene: `<p>At the Saltholmen pier, Johan and Noah look at the departures board.</p>`,
+      cast: ['Johan', 'Noah'],
+      lines: [
+        ['Johan', 'Har du varit i skärgården?', 'Have you been to the archipelago?'],
+        ['Noah', 'Nej, aldrig. Vilken ö är bäst?', 'No, never. Which island is best?'],
+        ['Johan', 'Styrsö eller Brännö. Brännö är närmare.', 'Styrsö or Brännö. Brännö is closer.'],
+        ['Noah', 'Då tar vi Brännö. När går båten?', "Then let's take Brännö. When does the boat leave?"],
+        ['Johan', 'Om tjugo minuter.', 'In twenty minutes.'],
+        ['Noah', 'Behöver vi nya biljetter?', 'Do we need new tickets?'],
+        ['Johan', 'Nej, spårvagnsbiljetten gäller på båten också.', 'No, the tram ticket is valid on the boat too.'],
+        ['Noah', 'Vad bra! Finns det något att äta där?', 'Great! Is there anything to eat there?'],
+        ['Johan', 'Ja, ett litet café vid hamnen.', 'Yes, a little café by the harbour.'],
+        ['Noah', 'Ska vi bada också?', 'Shall we go for a swim too?'],
+        ['Johan', 'Nej tack, vattnet är för kallt!', 'No thanks, the water is too cold!'],
+      ],
+    },
+  ],
+  notes: [
+    '<strong>The verb comes second:</strong> <span lang="sv">Idag åker vi.</span>',
+    '<strong><span lang="sv">Ska vi …?</span></strong> is the way to suggest anything.',
+    '<strong>Short answers echo the verb:</strong> <span lang="sv">Ja, det gör vi. Nej, det vågar jag inte.</span>',
+    '<strong>Comparing:</strong> <span lang="sv">billig → billigare än</span>.',
+  ],
+});

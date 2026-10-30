@@ -1,0 +1,91 @@
+// Lesson (en/sv): Swedish 7 – swimming, sauna, the telephone
+import { languageLesson } from '../../js/language.js';
+
+export default languageLesson({
+  id: 'sv-07', n: 7, courseTitle: 'Swedish 7: Simma och basta',
+  title: 'Simma och basta: pool and sauna',
+  scene: `<p>It is raining again, so Noah phones Johan and suggests the indoor pool. Then comes the part of the visit that matters to many Swedes: the sauna. You practise phone calls, making plans, and saying what you do not have.</p>`,
+  sounds: {
+    title: 'When r melts',
+    body: `<p>In standard Swedish an <span lang="sv">r</span> melts into the consonant after it. <span lang="sv">Rs</span> becomes a «sh» sound, as in <span lang="sv">mars</span> and <span lang="sv">först</span>. In <span lang="sv">rt, rd, rn</span> the tongue curls back and the <span lang="sv">r</span> disappears into the next sound. It happens across words too.</p>`,
+    items: [['mars', 'March', 'mash'], ['först', 'first', 'fursht'], ['torsdag', 'Thursday', 'toosh-da'], ['ett bord', 'a table', 'boord'], ['ett barn', 'a child', 'baan'], ['bort', 'away', 'bort']],
+  },
+  words: [
+    { group: 'At the pool', items: [['en simhall', 'an indoor pool'], ['en bassäng', 'a swimming pool'], ['ett omklädningsrum', 'a changing room'], ['ett skåp', 'a locker', 'skawp'], ['en handduk', 'a towel', 'han-dook'], ['badbyxor', 'swimming trunks', 'baad-bük-sor'], ['en baddräkt', 'a swimsuit'], ['en dusch', 'a shower'], ['en bastu', 'a sauna'], ['grader', 'degrees']] },
+    { group: 'On the phone', items: [['ringer', 'call'], ['hallå', 'hello (on the phone)'], ['det är …', "it's … (saying who you are)"], ['vi ses', 'see you', 'vee sess'], ['träffas', 'meet']] },
+    { group: 'None and some', items: [['ingen', 'no (en word)'], ['inget', 'no (ett word)'], ['inga', 'no (plural)'], ['någon', 'any (en word)', 'nawn'], ['något', 'any (ett word)', 'naw-got'], ['några', 'any (plural)', 'naw-gra']] },
+    { group: 'Useful verbs', items: [['simmar', 'swim'], ['badar', 'bathe'], ['lånar', 'borrow', 'law-nar'], ['glömmer', 'forget', 'glum-mer'], ['köper', 'buy', 'chur-per'], ['orkar', 'have the energy']] },
+    { group: 'Feeling', items: [['varmt', 'warm'], ['kallt', 'cold'], ['skönt', 'nice, comfortable', 'hwurnt'], ['hungrig', 'hungry'], ['trött', 'tired', 'trutt']] },
+  ],
+  sentences: [
+    ['Hej, det är Noah.', "Hi, it's Noah."],
+    ['Har du tid idag?', 'Do you have time today?'],
+    ['Ska vi gå och simma?', 'Shall we go for a swim?'],
+    ['Vi ses klockan sex.', 'See you at six.'],
+    ['Jag har inga badbyxor.', "I don't have any swimming trunks."],
+    ['Har du någon handduk?', 'Do you have a towel?'],
+    ['Kan jag låna din?', 'Can I borrow yours?'],
+    ['Det gör inget.', "It doesn't matter."],
+    ['Hur varmt är det?', 'How warm is it?'],
+    ['Vad skönt!', 'How nice!'],
+    ['Ska vi göra något ikväll?', 'Shall we do something tonight?'],
+    ['Jag är jättehungrig.', "I'm really hungry."],
+  ],
+  patternsTitle: 'none and any',
+  patternsBody: `<p><strong>«No» as in «no towel» agrees with the noun:</strong> <span lang="sv">ingen handduk</span> (en word), <span lang="sv">inget skåp</span> (ett word), <span lang="sv">inga pengar</span> (plural). The same goes for «any» in a question: <span lang="sv">någon, något, några</span>.</p>
+    <p><strong>On the phone</strong>, many Swedes answer with their name, and you say who you are with <span lang="sv">det är</span>: <span lang="sv">Hej, det är Noah</span>.</p>`,
+  patterns: [
+    { frame: 'Jag har {}.', en: 'I have {}.', options: [['ingen handduk', 'no towel'], ['inget skåp', 'no locker'], ['inga badbyxor', 'no swimming trunks'], ['inga pengar', 'no money']] },
+    { frame: 'Har du {}?', en: 'Do you have {}?', options: [['någon handduk', 'a towel'], ['något skåp', 'a locker'], ['några pengar', 'any money']] },
+    { frame: 'Ska vi {}?', en: 'Shall we {}?', options: [['gå och simma', 'go for a swim'], ['gå på bio', 'go to the cinema'], ['ta en öl', 'have a beer'], ['äta pizza', 'eat pizza']] },
+  ],
+  build: [
+    ['Ska vi gå och simma?', 'Shall we go for a swim?'],
+    ['Jag har inga badbyxor.', "I don't have any swimming trunks."],
+    ['Har du någon handduk?', 'Do you have a towel?'],
+    ['Vi ses klockan sex.', 'See you at six.'],
+    ['Ska vi göra något ikväll?', 'Shall we do something tonight?'],
+    ['Kan jag låna din?', 'Can I borrow yours?'],
+  ],
+  talks: [
+    {
+      title: 'a rainy phone call',
+      scene: `<p>Noah rings Johan, who answers the way Swedes often do: with his name.</p>`,
+      cast: ['Johan', 'Noah'],
+      lines: [
+        ['Johan', 'Johan.', 'Johan speaking.'],
+        ['Noah', 'Hej, det är Noah. Har du tid idag?', "Hi, it's Noah. Do you have time today?"],
+        ['Johan', 'Ja, efter jobbet. Vad vill du göra?', 'Yes, after work. What do you want to do?'],
+        ['Noah', 'Det regnar. Ska vi gå och simma?', "It's raining. Shall we go for a swim?"],
+        ['Johan', 'Bra idé! Klockan sex, vid Valhallabadet?', 'Good idea! At six, at Valhallabadet?'],
+        ['Noah', 'Okej. Men jag har inga badbyxor.', "Okay. But I don't have any swimming trunks."],
+        ['Johan', 'Det gör inget. Du kan köpa där.', "It doesn't matter. You can buy some there."],
+        ['Noah', 'Och jag har ingen handduk.', "And I don't have a towel."],
+        ['Johan', 'Du får låna min. Jag har två.', 'You can borrow mine. I have two.'],
+        ['Noah', 'Tack! Vi ses klockan sex.', 'Thanks! See you at six.'],
+      ],
+    },
+    {
+      title: 'in the sauna',
+      scene: `<p>After the laps, they sit on the top bench. Conversation in a sauna tends to be slow.</p>`,
+      cast: ['Johan', 'Noah'],
+      lines: [
+        ['Noah', 'Oj, vad varmt det är! Hur många grader?', 'Wow, it is hot! How many degrees?'],
+        ['Johan', 'Åttio, tror jag. Vad skönt!', 'Eighty, I think. How nice!'],
+        ['Noah', 'Har du bastu hemma?', 'Do you have a sauna at home?'],
+        ['Johan', 'Ja, i sommarstugan. Har ni bastu i Schweiz?', 'Yes, at the summer cottage. Do you have saunas in Switzerland?'],
+        ['Noah', 'Ja, men inte hemma hos mig.', 'Yes, but not at my place.'],
+        ['Johan', 'Hur länge orkar du?', 'How long can you stand it?'],
+        ['Noah', 'Inte så länge. Jag är jättehungrig också.', "Not very long. I'm really hungry too."],
+        ['Johan', 'Då äter vi pizza. Ska jag ringa Elin?', "Then let's eat pizza. Shall I call Elin?"],
+        ['Noah', 'Ja, gör det!', 'Yes, do that!'],
+      ],
+    },
+  ],
+  notes: [
+    '<strong>«No» agrees:</strong> <span lang="sv">ingen handduk, inget skåp, inga pengar</span>.',
+    '<strong>Say who you are with <span lang="sv">det är</span>:</strong> <span lang="sv">Hej, det är Noah.</span>',
+    '<strong><span lang="sv">Vi ses!</span></strong> closes almost every plan.',
+    '<strong><span lang="sv">Rs</span> sounds like «sh»:</strong> <span lang="sv">först, mars</span>.',
+  ],
+});
