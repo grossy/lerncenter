@@ -4,7 +4,7 @@
 import { h, confetti } from './lesson.js';
 import { playChord } from './audio.js';
 import { noteName } from './piano.js';
-import { getCtx, holdNotes, letRing } from './audio.js';
+import { getCtx, holdNotes, letRing, loadRhodes } from './audio.js';
 import { midiSupported, controllerState, onControllerChange, attachGrid, connectController, disconnectController, repaint } from './midi.js';
 
 export const SIZE = 8;
@@ -31,6 +31,7 @@ export function intervalName(semis) {
 }
 
 export function createGrid({ onPad = null, flat = false, labels = true } = {}) {
+  loadRhodes();
   const el = h(`<div class="pgrid-wrap"><div class="pgrid"></div><div class="pgrid-foot"><button type="button" class="chip pconnect"></button><span class="pstatus"></span></div></div>`);
   const grid = el.querySelector('.pgrid');
   const pads = [];

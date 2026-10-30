@@ -39,7 +39,8 @@ Dann <http://localhost:5173> öffnen.
 - `daemon/index.html`, `daemon/lesson.html?id=harmonic-shift` – Startseite (kompakte Liste, nach Fach gruppiert, ohne Icons) und Player von Daemon (Erwachsene, Englisch)
 - `daemon/lessons/` – Daemon-Lektionen und ihr Katalog (`daemon/lessons/index.js`)
 - `js/lesson.js` – gemeinsame Lektions-Engine; `mountLesson(lesson, { brand, tag })` bekommt Marke und Kopf-Tag vom Player
-- `js/audio.js` – kleiner Web-Audio-Synth (Klavier-ähnlich)
+- `js/audio.js` – kleiner Web-Audio-Synth (Klavier-ähnlich), dazu das Rhodes der Push-Lektionen aus den Aufnahmen in `audio/rhodes/`
+- `tools/build_rhodes.py` – macht aus Dennis' eigenen Aufnahmen in `dev import/Rhodes/` die Dateien in `audio/rhodes/`
 - `js/piano.js` – Klaviatur-Komponente
 - `js/lessons/terzen.js` – Inhalt und Widgets der Terzen-Lektion
 - `js/map.js` – klickbare Europakarte (SVG), `js/data/europe-map.js` – vorberechnete Länderumrisse

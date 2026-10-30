@@ -116,11 +116,77 @@ function playVoice(midi, { time = 0, dur = 0.8, vel = 0.45, type = 'piano' } = {
   };
 }
 
+/* Aufgenommene Rhodes-Töne aus audio/rhodes/, nach MIDI benannt (tools/build_rhodes.py). */
+const RHODES_ROOTS = [36, 40, 45, 48, 52, 57, 60, 64, 69, 72, 76, 81, 88, 93];
+let rhodes = null, rhodesLoading = null;
+
+/** MP3 beginnt je nach Browser mit etwas Stille: Abspielen erst ab dem Anschlag, sonst kommt der Ton zu spät. */
+function onsetOf(buffer) {
+  const data = buffer.getChannelData(0);
+  let peak = 0;
+  for (const v of data) peak = Math.max(peak, Math.abs(v));
+  return Math.max(0, data.findIndex((v) => Math.abs(v) > peak * 0.02)) / buffer.sampleRate;
+}
+/** Lädt die Aufnahmen. Fehlt eine, springt die nächstgelegene ein. Bis sie da sind oder wenn alle fehlen, spielt das FM-Rhodes. */
+export function loadRhodes() {
+  if (rhodesLoading) return rhodesLoading;
+  const decoder = new OfflineAudioContext(1, 1, 48000); // braucht keinen Klick, anders als ein AudioContext
+  rhodesLoading = Promise.all(RHODES_ROOTS.map(async (root) => {
+    try {
+      const res = await fetch(new URL(`../audio/rhodes/${root}.mp3`, import.meta.url));
+      const buffer = await decoder.decodeAudioData(await res.arrayBuffer());
+      return { root, buffer, start: onsetOf(buffer) };
+    } catch { return null; }
+  })).then((all) => {
+    const loaded = all.filter(Boolean);
+    if (loaded.length) rhodes = loaded;
+  });
+  return rhodesLoading;
+}
+
+function playRhodes(midi, opts) {
+  loadRhodes();
+  return (rhodes ? playRhodesSample : playRhodesFm)(midi, opts);
+}
+
+/** Spielt die nächstgelegene Aufnahme, umgestimmt auf den gewünschten Ton. */
+function playRhodesSample(midi, { time = 0, dur = 0.8, vel = 0.45 } = {}) {
+  const ac = getCtx();
+  const t = ac.currentTime + Math.max(0, time);
+  const { root, buffer, start } = rhodes.reduce((a, b) => (Math.abs(b.root - midi) < Math.abs(a.root - midi) ? b : a));
+  const rate = Math.pow(2, (midi - root) / 12);
+  const release = 0.07;
+  const end = Math.min(t + dur + release * 6, t + (buffer.duration - start) / rate);
+
+  const src = ac.createBufferSource();
+  src.buffer = buffer;
+  src.playbackRate.value = rate;
+  const out = ac.createGain();
+  src.connect(out).connect(master());
+  out.gain.setValueAtTime(0, t);
+  out.gain.linearRampToValueAtTime(vel, t + 0.002);
+  out.gain.setTargetAtTime(0.0001, t + dur, release);
+  src.start(t, start);
+  src.stop(end + 0.1);
+  return {
+    end,
+    done: () => ac.currentTime > end,
+    stop(fade = 0.08) {
+      const now = ac.currentTime;
+      if (now > end) return;
+      out.gain.cancelScheduledValues(now);
+      out.gain.setValueAtTime(out.gain.value, now);
+      out.gain.linearRampToValueAtTime(0.0001, now + fade);
+      try { src.stop(now + fade + 0.02); } catch {}
+    },
+  };
+}
+
 /**
  * E-Piano wie ein Rhodes, per FM: ein warmer Körper plus ein kurzer heller Anschlag (die «Tine»).
  * Dazu das langsame Stereo-Tremolo eines Suitcase-Modells. Hohe Töne klingen schneller ab, wie beim Original.
  */
-function playRhodes(midi, { time = 0, dur = 0.8, vel = 0.45 } = {}) {
+function playRhodesFm(midi, { time = 0, dur = 0.8, vel = 0.45 } = {}) {
   const ac = getCtx();
   const t = ac.currentTime + Math.max(0, time);
   const f = midiToFreq(midi);
