@@ -108,7 +108,7 @@ export function createGrid({ onPad = null, flat = false, labels = true } = {}) {
 function savedHand() { try { return localStorage.getItem('push-hand') || 'left'; } catch { return 'left'; } }
 function saveHand(v) { try { localStorage.setItem('push-hand', v); } catch {} }
 
-const hear = (midis, dur = 0.9) => playChord(midis, { dur, type: 'pad', vel: midis.length > 1 ? 0.26 : 0.36 });
+const hear = (midis, dur = 0.9) => playChord(midis, { dur, type: 'rhodes', vel: midis.length > 1 ? 0.26 : 0.36 });
 
 /**
  * Übung: zuschauen oder selbst spielen.

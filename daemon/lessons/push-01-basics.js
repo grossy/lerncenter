@@ -35,7 +35,7 @@ const tenths = (shift = 0) => WHITE.slice(0, 11).map((low, i) => {
 function exploreWidget(host) {
   let last = null;
   const grid = createGrid({ onPad(r, c, m) {
-    playNote(m, { dur: 0.9, type: 'pad', vel: 0.36 });
+    playNote(m, { dur: 0.9, type: 'rhodes', vel: 0.36 });
     grid.light(m);
     if (!last) read.textContent = `${nameOf(m)}. Now press the pad to its right, or the one above it.`;
     else if (r === last[0] && c === last[1]) read.textContent = `${nameOf(m)} again.`;
@@ -68,7 +68,7 @@ function findWidget(host) {
   host.appendChild(root);
   const $ = (s) => root.querySelector(s);
   const grid = createGrid({ onPad(r, c, m) {
-    playNote(m, { dur: 0.9, type: 'pad', vel: 0.36 });
+    playNote(m, { dur: 0.9, type: 'rhodes', vel: 0.36 });
     if (i >= ROUNDS) { grid.light(m); return; }
     if (m % 12 !== order[i]) {
       wrongThisRound = true;
@@ -153,7 +153,7 @@ function rockWidget(host) {
   function tick() {
     const k = SEQ[i % SEQ.length];
     pose(k);
-    playNote(NOTES[k], { dur: 0.5, type: 'pad', vel: 0.36 });
+    playNote(NOTES[k], { dur: 0.5, type: 'rhodes', vel: 0.36 });
     i++;
     timer = setTimeout(tick, 480);
   }
@@ -237,7 +237,7 @@ function twoHandsWidget(host) {
   host.appendChild(root);
   const $ = (s) => root.querySelector(s);
   const grid = createGrid({ onPad(r, c, m) {
-    playNote(m, { dur: pedal ? 2.6 : 0.3, type: 'pad', vel: 0.3 });
+    playNote(m, { dur: pedal ? 2.6 : 0.3, type: 'rhodes', vel: 0.3 });
     grid.light(m);
     if (!isNatural(m)) {
       $('.readout').className = 'readout bad';
@@ -261,8 +261,8 @@ function twoHandsWidget(host) {
     const events = DYADS.flatMap((d, b) => {
       const [low, high] = d.cells.map(midi), o = b * 16;
       return pattern === 'whole'
-        ? [{ step: o, notes: [low, high], dur: 15.5, vel: 0.28, type: 'pad' }]
-        : [0, 4, 8, 12].map((s, k) => ({ step: o + s, notes: [k % 2 ? high : low], dur: 6, vel: 0.3, type: 'pad' }));
+        ? [{ step: o, notes: [low, high], dur: 15.5, vel: 0.28, type: 'rhodes' }]
+        : [0, 4, 8, 12].map((s, k) => ({ step: o + s, notes: [k % 2 ? high : low], dur: 6, vel: 0.3, type: 'rhodes' }));
     });
     let bar = -1;
     return createLoop({ bpm: 76, steps: 64, events, onStep(s) {

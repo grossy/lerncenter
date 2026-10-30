@@ -69,10 +69,10 @@ function anatomyWidget(host) {
     <div class="controls"><button class="btn primary big go">▶ Hear it</button></div>
   </div>`);
   host.appendChild(root);
-  const grid = createGrid({ onPad(_, __, m) { playNote(m, { dur: 0.9, type: 'pad', vel: 0.36 }); } });
+  const grid = createGrid({ onPad(_, __, m) { playNote(m, { dur: 0.9, type: 'rhodes', vel: 0.36 }); } });
   root.querySelector('.pgrid-host').appendChild(grid.el);
   const read = root.querySelector('.readout');
-  function sound() { playChord(PARTS.filter((p) => p.on).map((p) => midiAt(...p.cell)), { dur: 1.8, type: 'pad', vel: 0.24 }); }
+  function sound() { playChord(PARTS.filter((p) => p.on).map((p) => midiAt(...p.cell)), { dur: 1.8, type: 'rhodes', vel: 0.24 }); }
   function show() {
     grid.unmark('next'); grid.clearFingers();
     for (const p of PARTS) if (p.on) { grid.mark([p.cell], 'next'); grid.finger(p.cell[0], p.cell[1], p.fin); }
@@ -124,7 +124,7 @@ function placerWidget({ kinds = ['closed'], qualities = ['major'], recorder = fa
       grid.mark(cs, 'next');
       cs.forEach(([r, c], i) => grid.finger(r, c, SHAPES[k].fingers.left[i]));
       if (!loop) {
-        playChord(midis(cs), { dur: 1.8, type: 'pad', vel: 0.24 });
+        playChord(midis(cs), { dur: 1.8, type: 'rhodes', vel: 0.24 });
         midis(cs).forEach((m) => grid.light(m, 700));
       }
       placed.add(rt % 12);
@@ -154,7 +154,7 @@ function placerWidget({ kinds = ['closed'], qualities = ['major'], recorder = fa
       renderRecent();
     }
     function startLoop() {
-      const events = taken.map((t, b) => ({ step: b * 16, notes: midis(t.cs), dur: 15, vel: 0.24, type: 'pad' }));
+      const events = taken.map((t, b) => ({ step: b * 16, notes: midis(t.cs), dur: 15, vel: 0.24, type: 'rhodes' }));
       let bar = -1;
       loop = createLoop({ bpm: 80, steps: taken.length * 16, events, onStep(s) {
         if (s < 0) return;
@@ -212,7 +212,7 @@ function bigChordsWidget({ full, patterns }) {
     </div>`);
     host.appendChild(root);
     const read = root.querySelector('.readout');
-    const grid = createGrid({ flat: true, onPad(_, __, m) { playNote(m - 12, { dur: 1.4, type: 'pad', vel: 0.32 }); grid.light(m); } });
+    const grid = createGrid({ flat: true, onPad(_, __, m) { playNote(m - 12, { dur: 1.4, type: 'rhodes', vel: 0.32 }); grid.light(m); } });
     root.querySelector('.pgrid-host').appendChild(grid.el);
     function show(b) {
       const ch = BIG[b];
@@ -229,9 +229,9 @@ function bigChordsWidget({ full, patterns }) {
         const o = b * 16;
         const low = leftHand(ch.left[0], ch.left[1], ch.minor, full).map(({ cell }) => midiAt(...cell) - 12);
         const high = midis(SHAPES.closed.cells(ch.right[0], ch.right[1], ch.minor)).map((m) => m - 12);
-        const left = { step: o, notes: low, dur: 15.5, vel: 0.26, type: 'pad' };
-        if (pattern === 'block') return [left, { step: o, notes: high, dur: 15.5, vel: 0.2, type: 'pad' }];
-        return [left, ...ARP.map((n, k) => ({ step: o + k * 2, notes: [high[n]], dur: 3, vel: 0.26, type: 'pluck' }))];
+        const left = { step: o, notes: low, dur: 15.5, vel: 0.26, type: 'rhodes' };
+        if (pattern === 'block') return [left, { step: o, notes: high, dur: 15.5, vel: 0.2, type: 'rhodes' }];
+        return [left, ...ARP.map((n, k) => ({ step: o + k * 2, notes: [high[n]], dur: 3, vel: 0.26, type: 'rhodes' }))];
       });
       let bar = -1;
       return createLoop({ bpm: 72, steps: BIG.length * 16, events, onStep(s) {

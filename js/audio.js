@@ -25,6 +25,7 @@ const VOICES = {
  * Gibt ein Handle mit stop() zurück.
  */
 export function playNote(midi, { time = 0, dur = 0.8, vel = 0.45, type = 'piano' } = {}) {
+  if (type === 'rhodes') return playRhodes(midi, { time, dur, vel });
   const ac = getCtx();
   const v = VOICES[type] || VOICES.piano;
   const t = ac.currentTime + Math.max(0, time);
@@ -53,6 +54,66 @@ export function playNote(midi, { time = 0, dur = 0.8, vel = 0.45, type = 'piano'
   out.gain.exponentialRampToValueAtTime(Math.max(0.0001, vel * v.sustain), t + v.attack + v.decay);
   out.gain.setTargetAtTime(0.0001, t + dur, v.release);
   const end = t + dur + v.release * 6;
+  return {
+    end,
+    done: () => ac.currentTime > end,
+    stop(fade = 0.08) {
+      const now = ac.currentTime;
+      if (now > end) return;
+      out.gain.cancelScheduledValues(now);
+      out.gain.setValueAtTime(out.gain.value, now);
+      out.gain.linearRampToValueAtTime(0.0001, now + fade);
+      oscs.forEach((o) => { try { o.stop(now + fade + 0.02); } catch {} });
+    },
+  };
+}
+
+/**
+ * E-Piano wie ein Rhodes, per FM: ein warmer Körper plus ein kurzer heller Anschlag (die «Tine»).
+ * Dazu das langsame Stereo-Tremolo eines Suitcase-Modells. Hohe Töne klingen schneller ab, wie beim Original.
+ */
+function playRhodes(midi, { time = 0, dur = 0.8, vel = 0.45 } = {}) {
+  const ac = getCtx();
+  const t = ac.currentTime + Math.max(0, time);
+  const f = midiToFreq(midi);
+  const strength = Math.min(1, vel / 0.4);
+  const ring = Math.max(0.6, 2.2 - (midi - 48) * 0.04); // Abklingzeit, tiefe Töne tragen länger
+  const release = 0.14;
+  const end = t + dur + release * 6;
+
+  const out = ac.createGain();
+  const lp = ac.createBiquadFilter();
+  lp.type = 'lowpass';
+  lp.frequency.value = 7000;
+  out.connect(lp);
+  const pan = ac.createStereoPanner ? ac.createStereoPanner() : null;
+  if (pan) { lp.connect(pan); pan.connect(ac.destination); } else lp.connect(ac.destination);
+
+  const oscs = [];
+  const osc = (freq) => { const o = ac.createOscillator(); o.frequency.value = freq; o.start(t); o.stop(end + 0.1); oscs.push(o); return o; };
+  /** Modulator auf Träger: index ist der FM-Index, er fällt mit decay auf rest ab. */
+  function stack(ratio, level, index, rest, decay) {
+    const carrier = osc(f), mod = osc(f * ratio);
+    const depth = ac.createGain(), g = ac.createGain();
+    depth.gain.setValueAtTime(index * f * ratio, t);
+    depth.gain.setTargetAtTime(rest * f * ratio, t + 0.002, decay);
+    g.gain.value = level;
+    mod.connect(depth).connect(carrier.frequency);
+    carrier.connect(g).connect(out);
+  }
+  stack(1, 0.8, 0.5 + 1.1 * strength, 0.12, 0.45);
+  const tine = f * 14 < 13000 ? 14 : f * 7 < 13000 ? 7 : 3; // bleibt unter der Abtastgrenze
+  stack(tine, 0.2 + 0.15 * strength, 0.4 + 0.9 * strength, 0, 0.09);
+
+  if (pan) {
+    const lfo = osc(4.6), amount = ac.createGain();
+    amount.gain.value = 0.22;
+    lfo.connect(amount).connect(pan.pan);
+  }
+  out.gain.setValueAtTime(0, t);
+  out.gain.linearRampToValueAtTime(vel, t + 0.003);
+  out.gain.setTargetAtTime(vel * 0.0001, t + 0.003, ring);
+  out.gain.setTargetAtTime(0.0001, t + dur, release);
   return {
     end,
     done: () => ac.currentTime > end,
