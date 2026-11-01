@@ -40,6 +40,17 @@ export const catalog = [
     available: true,
     load: () => import('./flaeche.js'),
   },
+  {
+    id: 'brueche',
+    title: 'Brüche entdecken',
+    subject: 'Mathe',
+    grade: 6,
+    emoji: '🍕',
+    color: 'c-math',
+    description: 'Mit Pizza, Schokolade und Gummibärchen: was ein Bruch ist, Brüche vergleichen, erweitern und kürzen, plus und minus rechnen.',
+    available: true,
+    load: () => import('./brueche.js'),
+  },
 ];
 
 export const lessons = Object.fromEntries(catalog.filter((l) => l.load).map((l) => [l.id, l.load]));

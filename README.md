@@ -5,6 +5,7 @@ Eine Lern-Webapp für Kinder, inspiriert von [Ableton Learn](https://learn.ablet
 - **Kleine und grosse Terzen** (Musik, Klasse 6)
 - **Europa: Länder und Hauptstädte** (Geografie, Klasse 6)
 - **Flächeninhalt und Umfang** (Mathe, Klasse 6)
+- **Brüche entdecken** (Mathe, Klasse 6)
 
 Kein Build-Schritt nötig, nur ein statischer Webserver (ES-Module brauchen `http://`, nicht `file://`):
 
