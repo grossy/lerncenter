@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lerncenter</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    try { var t = localStorage.getItem('lerncenter-theme'); } catch (e) {}
+    document.documentElement.dataset.theme = t || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-title" style="padding-left:.5rem">🎓 Lerncenter</div>
+    <button class="iconbtn theme" aria-label="Hell / Dunkel">◐</button>
+  </header>
+  <main class="home">
+    <section class="hero">
+      <h1>Lerncenter</h1>
+      <p>Lerne spielerisch – direkt im Browser. Hören, ausprobieren, verstehen.</p>
+    </section>
+    <section class="filter" id="filter"></section>
+    <section class="courses" id="courses"></section>
+  </main>
+  <script type="module">
+    import { toggleTheme } from './js/theme.js';
+    import { catalog, GRADES, gradeLabel } from './js/lessons/index.js';
+    document.querySelector('.theme').onclick = toggleTheme;
+
+    const KEY_GRADE = 'lerncenter-grade';
+    const KEY_SUBJECT = 'lerncenter-subject';
+    let grade = 'alle', subject = 'alle';
+    try {
+      grade = localStorage.getItem(KEY_GRADE) || 'alle';
+      subject = localStorage.getItem(KEY_SUBJECT) || 'alle';
+    } catch {}
+    if (!/^(alle|\d+)$/.test(grade)) grade = 'alle';
+
+    const filterEl = document.getElementById('filter');
+    const coursesEl = document.getElementById('courses');
+    const subjects = () => [...new Set(catalog.map((l) => l.subject))].sort((a, b) => a.localeCompare(b, 'de'));
+
+    function makeSelect(label, options, value, onChange) {
+      const wrap = document.createElement('label');
+      wrap.className = 'select';
+      wrap.innerHTML = `<span class="label">${label}</span>`;
+      const sel = document.createElement('select');
+      for (const o of options) {
+        const opt = document.createElement('option');
+        opt.value = o.value;
+        opt.textContent = o.text;
+        if (o.value === value) opt.selected = true;
+        sel.appendChild(opt);
+      }
+      sel.onchange = () => onChange(sel.value);
+      wrap.appendChild(sel);
+      return wrap;
+    }
+
+    function renderFilter() {
+      filterEl.innerHTML = '';
+      filterEl.appendChild(makeSelect('Fach',
+        [{ value: 'alle', text: 'Alle Fächer' }, ...subjects().map((s) => ({ value: s, text: s }))],
+        subject,
+        (v) => { subject = v; try { localStorage.setItem(KEY_SUBJECT, v); } catch {} renderCourses(); }));
+      filterEl.appendChild(makeSelect('Klasse',
+        [{ value: 'alle', text: 'Alle Klassen' }, ...GRADES.map((g) => ({ value: String(g), text: gradeLabel(g) }))],
+        grade,
+        (v) => { grade = v; try { localStorage.setItem(KEY_GRADE, v); } catch {} renderCourses(); }));
+    }
+
+    function renderCourses() {
+      const list = catalog.filter((l) =>
+        (grade === 'alle' || String(l.grade) === grade) &&
+        (subject === 'alle' || l.subject === subject));
+      coursesEl.innerHTML = '';
+      if (!list.length) {
+        coursesEl.innerHTML = '<p class="empty-state">Für diese Auswahl gibt es noch keine Lektionen.</p>';
+        return;
+      }
+      for (const l of list) {
+        const el = document.createElement(l.available ? 'a' : 'div');
+        el.className = `course ${l.color}${l.available ? '' : ' soon'}`;
+        if (l.available) el.href = `lesson.html?id=${l.id}`;
+        el.innerHTML = `
+          <div class="art">${l.emoji}</div>
+          <span class="tag grade">${gradeLabel(l.grade)}</span>
+          <div class="meta">${l.subject}</div>
+          <h2>${l.title}</h2>
+          <p>${l.description}</p>
+          <span class="btn${l.available ? '' : ' ghost'}">${l.available ? 'Start →' : 'Bald…'}</span>`;
+        coursesEl.appendChild(el);
+      }
+    }
+    renderFilter();
+    renderCourses();
+  </script>
+</body>
+</html>
