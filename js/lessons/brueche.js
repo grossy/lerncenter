@@ -230,27 +230,36 @@ function pizzeriaWidget(host) {
         <div class="pizza-spot"></div>
         <div class="step-label">🔪 In wie viele Stücke schneidest du?</div>
         ${chipRow('cuts', [2, 3, 4, 5, 6, 8].map((c) => [c, c]))}
-        <div class="controls"><button class="btn primary big serve" disabled>🛎️ Servieren</button></div>`;
-      const spot = stage.querySelector('.pizza-spot'), serve = stage.querySelector('.serve');
+        <div class="live"></div>
+        <div class="controls"><button class="btn primary big serve">🛎️ Servieren</button></div>`;
+      const spot = stage.querySelector('.pizza-spot'), serve = stage.querySelector('.serve'), live = stage.querySelector('.live');
+      const tell = (nudge = false) => {
+        live.textContent = !cut ? 'Wähle zuerst, in wie viele Stücke du schneidest.'
+          : picked.size ? `Belegt: ${picked.size} von ${cut} Stücken.`
+          : 'Tippe jetzt auf die Stücke, die du belegen willst.';
+        live.classList.toggle('nudge', nudge);
+      };
       const draw = () => { spot.innerHTML = pizza(cut || 1, () => '', { tap: cut > 1 && !closed, label: 'Pizza zum Belegen' }); };
       onSlice(spot, (k, s) => {
         if (closed) return;
         if (picked.has(k)) picked.delete(k); else picked.add(k);
         s.classList.toggle('on', picked.has(k));
         blip();
-        serve.disabled = picked.size === 0;
+        tell();
       });
       stage.querySelectorAll('.cuts .chip').forEach((c) => (c.onclick = () => {
         if (closed) return;
         cut = +c.dataset.v;
         picked.clear();
         select(stage.querySelector('.cuts'), cut);
-        serve.disabled = true;
+        tell();
         draw();
       }));
       serve.onclick = () => {
+        if (!cut || !picked.size) { nope(); tell(true); return; }
         closed = true;
         serve.disabled = true;
+        live.textContent = '';
         stage.querySelectorAll('.cuts .chip').forEach((c) => (c.disabled = true));
         const got = [picked.size, cut];
         const ok = sameValue(got, [n, d]);
@@ -262,6 +271,7 @@ function pizzeriaWidget(host) {
           answer(false, `❌ Das waren ${fr(...got)}. Bestellt war ${fr(n, d)}: in ${d} Stücke schneiden und ${n} belegen, so wie auf dem Bild.`);
         }
       };
+      tell();
       draw();
     },
   });
@@ -552,18 +562,19 @@ function baerenWidget(host) {
         ${chipRow('nums', [2, 3, 4, 5, 6].map((c) => [c, c]))}
         <div class="plates"></div>
         <div class="live"></div>
-        <div class="controls"><button class="btn primary big take" disabled>🐻 Das nehme ich</button></div>`;
+        <div class="controls"><button class="btn primary big take">🐻 Das nehme ich</button></div>`;
       const box = stage.querySelector('.plates'), live = stage.querySelector('.live'), take = stage.querySelector('.take');
       const bears = (k) => '🐻'.repeat(k);
       function draw() {
-        if (!plates) { box.innerHTML = `<div class="plate pile">${bears(total)}</div>`; live.textContent = ''; return; }
+        live.classList.remove('nudge');
+        if (!plates) { box.innerHTML = `<div class="plate pile">${bears(total)}</div>`; live.textContent = 'Wähle zuerst, auf wie viele Teller du verteilst.'; return; }
         const each = Math.floor(total / plates), rest = total - each * plates;
         box.innerHTML = Array.from({ length: plates }, (_, p) => `<button class="plate${taken.has(p) ? ' taken' : ''}" data-p="${p}" ${rest || closed ? 'disabled' : ''} aria-label="Teller ${p + 1} mit ${each} Gummibärchen">${bears(each)}</button>`).join('')
           + (rest ? `<div class="plate pile">${bears(rest)}</div>` : '');
         live.innerHTML = rest
           ? `Das geht nicht auf: ${rest} Gummibärchen ${rest === 1 ? 'bleibt' : 'bleiben'} übrig. Versuch eine andere Tellerzahl.`
           : `2. Tippe auf die Teller, die du nimmst. Du hast <strong>${taken.size * each}</strong> Gummibärchen.`;
-        take.disabled = closed || taken.size === 0;
+        take.disabled = closed;
       }
       stage.querySelectorAll('.nums .chip').forEach((c) => (c.onclick = () => {
         if (closed) return;
@@ -580,6 +591,7 @@ function baerenWidget(host) {
         draw();
       });
       take.onclick = () => {
+        if (!plates || total % plates || !taken.size) { nope(); live.classList.add('nudge'); return; }
         closed = true;
         stage.querySelectorAll('.nums .chip').forEach((c) => (c.disabled = true));
         const got = taken.size * Math.floor(total / plates);

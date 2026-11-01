@@ -398,6 +398,7 @@ button.plate { cursor: pointer; touch-action: manipulation; }
 .plate.pile { max-width: none; border-radius: 12px; border-style: dashed; }
 .plate.taken { background: var(--accent-soft); border-color: var(--accent); }
 .live { min-height: 1.6em; margin-top: .6rem; }
+.live.nudge { color: var(--bad); font-weight: 700; }
 .quiz .choices.grid .frac, .duel .frac { font-size: 1.2em; }
 @media (max-width: 560px) {
   .memory { grid-template-columns: repeat(3, 1fr); }
