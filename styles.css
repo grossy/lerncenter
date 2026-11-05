@@ -224,6 +224,7 @@ mark { background: var(--accent-soft); color: inherit; padding: 0 .3em; border-r
 .c-adult { background: #b8e0ff; }
 .c-geo { background: #a8e6cf; }
 .c-math { background: #ffd166; }
+.c-english { background: #ffc2d1; }
 .filter { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-bottom: 1.5rem; }
 .filter { gap: 1rem; }
 .filter .select { display: flex; align-items: center; gap: .5rem; }
@@ -642,3 +643,55 @@ body.daemon .c-book { background: #f4c98f; }
 .spoken-card.no-text .spoken-say, .spoken-card.no-text .spoken-en { visibility: hidden; }
 .spoken-answer { background: var(--surface-2); border-radius: 12px; padding: 1rem; margin: 1rem 0; }
 .word.no-clip .word-main { cursor: default; }
+
+/* ---------- Englisch-Vokabeln ---------- */
+.vocab { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .5rem; margin-top: 1rem; }
+.vocab .btn { justify-content: center; font-size: 1rem; padding: .6em .8em; }
+.vocab .btn.selected { background: var(--accent); color: #fff; }
+.word-card { margin-top: 1rem; background: var(--surface-2); border-radius: 12px; padding: 1rem 1.25rem; }
+.word-card .head { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.word-card .en { font-size: 1.6rem; font-weight: 700; }
+.ipa { color: var(--muted); font-family: "Charis SIL", "Doulos SIL", Gentium, Georgia, "Times New Roman", serif; font-size: 1rem; font-weight: 400; }
+.word-card .de { font-size: 1.15rem; margin-top: .25rem; }
+.word-card .ex { margin-top: .5rem; font-style: italic; min-height: 1.5em; }
+.word-card .note { margin-top: .4rem; color: var(--bad); font-weight: 600; font-size: .95rem; }
+.btn.speak { padding: .35em .6em; font-size: 1.1rem; border-radius: 10px; background: var(--surface); border-color: var(--border); }
+.btn.speak.small { padding: .1em .4em; font-size: .95rem; vertical-align: middle; }
+.flash-ex { margin-top: .5rem; color: var(--muted); font-style: italic; }
+.flash-ex strong { color: var(--text); }
+.flash .ipa { margin: 0 .3em; }
+.match { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem 1rem; margin-top: 1rem; }
+.match .col { display: grid; gap: .5rem; align-content: start; }
+.match .btn { justify-content: center; text-align: center; font-size: 1rem; padding: .7em .6em; min-height: 3.2em; }
+.match .btn.done { background: var(--ok); color: #fff; opacity: .55; }
+.match .btn.bad { animation: shake .3s; }
+@keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+.sentence { font-size: 1.35rem; margin-top: 1rem; line-height: 1.5; }
+.sentence .gap { display: inline-block; min-width: 4em; border-bottom: 3px solid var(--accent); text-align: center; color: var(--accent); font-weight: 700; line-height: 1.2; }
+.sentence .gap.filled { border-color: var(--ok); color: var(--ok); }
+.sentence.prompt { font-weight: 700; }
+.quiz .choices.grid.three { grid-template-columns: 1fr 1fr 1fr; }
+.typing { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; margin-top: .75rem; }
+.typing input { font: inherit; font-size: 1.2rem; font-weight: 600; flex: 1 1 12rem; min-width: 0; padding: .55em .8em; border-radius: 10px; border: 2px solid var(--border); background: var(--surface); color: var(--text); }
+.typing input:focus { outline: none; border-color: var(--accent); }
+.hint-letters { font-family: ui-monospace, Menlo, monospace; letter-spacing: .12em; font-size: 1.15rem; }
+.compare-table { width: 100%; border-collapse: collapse; font-size: 1.05rem; }
+.compare-table th, .compare-table td { text-align: left; padding: .4em .6em; border-bottom: 1px solid var(--border); vertical-align: top; }
+.compare-table th { color: var(--muted); font-size: .85rem; font-weight: 600; }
+.speaker-line { display: flex; gap: .6rem; margin-top: 1rem; font-size: 1.3rem; line-height: 1.5; }
+.speaker-line .who { font-weight: 700; color: var(--muted); flex: 0 0 auto; }
+.mindmap { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: .6rem; margin-top: 1rem; }
+.mindmap .card h4 { font-size: .9rem; letter-spacing: .05em; }
+.mindmap li.new { color: var(--ok); font-weight: 700; }
+.word-item { padding: .3em 0; border-top: 1px solid var(--border); }
+.word-item:first-child { border-top: 0; }
+.word-item .line { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; }
+.word-item .de { color: var(--muted); font-size: .95rem; }
+.widget .chips.groups { margin-top: 0; }
+.widget .segmented + .chips.groups { margin-top: .75rem; }
+@media (max-width: 480px) {
+  .match { gap: .5rem; }
+  .match .btn { font-size: .9rem; padding: .6em .4em; }
+  .quiz .choices.grid.three { grid-template-columns: 1fr; }
+  .compare-table { font-size: .95rem; }
+}

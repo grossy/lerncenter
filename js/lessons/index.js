@@ -51,6 +51,17 @@ export const catalog = [
     available: true,
     load: () => import('./brueche.js'),
   },
+  {
+    id: 'party-words',
+    title: 'Birthday party ideas: Vokabeln',
+    subject: 'Englisch',
+    grade: 6,
+    emoji: '🎂',
+    color: 'c-english',
+    description: 'Die 55 Wörter aus dem Englischbuch (Seite 211 bis 213) mit Stimme: Wörter entdecken, Lernkarten, Zuordnen, Lückentext, Schreiben, Vergleichen, Birthday-Mindmap und Abschlussquiz.',
+    available: true,
+    load: () => import('./party-words.js'),
+  },
 ];
 
 export const lessons = Object.fromEntries(catalog.filter((l) => l.load).map((l) => [l.id, l.load]));
