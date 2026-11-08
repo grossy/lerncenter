@@ -52,6 +52,17 @@ export const catalog = [
     load: () => import('./brueche.js'),
   },
   {
+    id: 'anteil',
+    title: 'Den Anteil von etwas berechnen',
+    subject: 'Mathe',
+    grade: 6,
+    emoji: '🫗',
+    color: 'c-math',
+    description: 'Wie viel ist 7/10 von einem Liter? Mit Karaffe und Strecke den Bruchteil eines Ganzen berechnen, Stammbrüche, und rückwärts vom Bruchteil zum Ganzen. Mit den Aufgaben 15 bis 22 aus dem Heft.',
+    available: true,
+    load: () => import('./anteil.js'),
+  },
+  {
     id: 'party-words',
     title: 'Birthday party ideas: Vokabeln',
     subject: 'Englisch',

@@ -695,3 +695,50 @@ body.daemon .c-book { background: #f4c98f; }
   .quiz .choices.grid.three { grid-template-columns: 1fr; }
   .compare-table { font-size: .95rem; }
 }
+
+/* ---------- Anteil berechnen (Karaffe, Strecken, Lückentext) ---------- */
+:root { --water: #4cc3f0; }
+:root[data-theme="dark"] { --water: #2f9fd0; }
+.karaffe-spot { width: 100%; max-width: 250px; margin: 0 auto; }
+.karaffe { display: block; width: 100%; height: auto; }
+.karaffe .glass { fill: var(--surface-2); stroke: var(--text); stroke-width: 3; stroke-linejoin: round; }
+.karaffe .water { fill: var(--water); }
+.karaffe .part-line { stroke: var(--text); stroke-width: 1.5; stroke-dasharray: 5 4; opacity: .7; }
+.karaffe .one { fill: none; stroke: var(--bad); stroke-width: 3.5; }
+.karaffe .tick { stroke: var(--text); stroke-width: 2; }
+.karaffe .lbl { font: 600 12px var(--font); fill: var(--text); }
+.karaffe .ml { font: 700 15px var(--font); fill: var(--text); paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; }
+.strecke-rows { display: grid; gap: .1rem; margin-top: .5rem; }
+.strecke-row, .strecke-op { transition: opacity .25s; }
+.strecke-row.pending, .strecke-op.pending { opacity: .15; }
+.strecke { display: block; width: 100%; height: auto; }
+.strecke .seg { stroke: var(--text); stroke-width: 4; }
+.strecke .seg.dash { stroke-dasharray: 7 6; stroke-width: 2.5; opacity: .5; }
+.strecke .tick { stroke: var(--text); stroke-width: 2.5; }
+.strecke .tick.dash { opacity: .5; }
+.strecke .brace { fill: none; stroke: var(--accent); stroke-width: 2; }
+.strecke .sl { font: 700 14px var(--font); fill: var(--text); }
+.strecke .fl { stroke: var(--text); stroke-width: 1.5; }
+.strecke-op { text-align: center; font-weight: 700; color: var(--accent); font-size: 1.1rem; line-height: 1.2; }
+.terms { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-top: .75rem; font-weight: 600; justify-content: center; }
+.term { display: inline-block; font-size: .8rem; font-weight: 700; padding: .15em .6em; border-radius: 999px; background: var(--accent-soft); margin-right: .4em; vertical-align: middle; }
+.steps { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: .5rem; counter-reset: s; }
+.steps li { background: var(--surface-2); border-radius: 10px; padding: .55rem .9rem; display: grid; grid-template-columns: auto 1fr; gap: .6rem; transition: opacity .25s; }
+.steps li::before { counter-increment: s; content: counter(s) "."; font-weight: 700; color: var(--accent); }
+.steps li.pending { opacity: .35; }
+.gaps { display: grid; gap: .6rem; font-size: 1.1rem; }
+.gaps .line { background: var(--surface-2); border-radius: 10px; padding: .5rem .9rem; line-height: 2.1; }
+.gap-in { font: inherit; font-weight: 700; width: 3.6em; text-align: center; padding: .1em .3em; margin: 0 .15em; border-radius: 8px; border: 2px solid var(--border); background: var(--surface); color: var(--text); }
+.gap-in:focus { outline: none; border-color: var(--accent); }
+.gap-in.ok { border-color: var(--ok); }
+.gap-in.bad { border-color: var(--bad); color: var(--bad); }
+.fehler { display: grid; gap: .5rem; margin-top: .5rem; }
+.fehler .btn { justify-content: flex-start; text-align: left; }
+.dir-cards { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-bottom: 1rem; }
+.dir-card { background: var(--surface-2); border-radius: 12px; padding: .9rem 1rem; display: grid; gap: .35rem; }
+.dir-card h4 { margin: 0; }
+.dir-card .sub { color: var(--muted); font-size: .9rem; }
+.dir-card .ex { font-weight: 600; }
+.quiz .unit-lbl { font-weight: 700; font-size: 1.1rem; }
+.quiz .choices .btn.big { font-size: 1.1rem; padding: .9em .6em; }
+@media (max-width: 560px) { .dir-cards { grid-template-columns: 1fr; } .gaps { font-size: 1rem; } .strecke .sl { font-size: 17px; } }
