@@ -73,6 +73,17 @@ export const catalog = [
     available: true,
     load: () => import('./party-words.js'),
   },
+  {
+    id: 'skelett',
+    title: 'Skelett, Gelenke und Muskeln',
+    subject: 'Biologie',
+    grade: 6,
+    emoji: '🦴',
+    color: 'c-bio',
+    description: 'Für die Klassenarbeit: die 16 Teile des Skeletts beschriften, schützen und stützen, lange, kurze und platte Knochen, Aufbau eines Gelenks und das Gegenspielerprinzip. Mit Lückentexten, Lernkarten und Probe-Test.',
+    available: true,
+    load: () => import('./skelett.js'),
+  },
 ];
 
 export const lessons = Object.fromEntries(catalog.filter((l) => l.load).map((l) => [l.id, l.load]));
