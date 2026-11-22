@@ -1,6 +1,7 @@
 // Lektion (Klasse 6, Englisch): Vokabeln «Birthday party ideas», Schulbuch Seite 211 bis 213.
 // Die englischen Wörter, Lautschrift und Beispielsätze stehen genau so im Buch; die deutschen Bedeutungen mit ss.
 import { h, confetti } from '../lesson.js';
+import { isMuted } from '../mute.js';
 
 const shuffle = (a) => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const pick = (a, n) => shuffle(a).slice(0, n);
@@ -114,7 +115,7 @@ function englishVoice() {
 }
 let utterance = null; // Referenz halten, sonst bricht Chrome manchmal ab
 function say(text) {
-  if (!synth) return;
+  if (!synth || isMuted()) return; // im Test stumm
   synth.cancel();
   const u = new SpeechSynthesisUtterance(text);
   const v = englishVoice();

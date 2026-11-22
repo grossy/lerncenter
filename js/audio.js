@@ -1,4 +1,6 @@
 // Kleiner Web-Audio-Synth mit ein paar Klangfarben plus Loop-Sequencer.
+import { isMuted } from './mute.js';
+
 let ctx = null;
 
 export function getCtx() {
@@ -13,7 +15,7 @@ function master() {
   const ac = getCtx();
   if (bus?.context === ac) return bus;
   const trim = ac.createGain();
-  trim.gain.value = 0.75;
+  trim.gain.value = isMuted() ? 0 : 0.75; // im Test stumm: alles läuft wie sonst, nur ohne Ton
   const limit = ac.createDynamicsCompressor();
   limit.threshold.value = -14;
   limit.knee.value = 10;

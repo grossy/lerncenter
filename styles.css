@@ -870,3 +870,44 @@ body.daemon .c-book { background: #f4c98f; }
   .cloze { font-size: 1rem; }
   .gapslot { min-width: 4.5em; }
 }
+/* ---------- Brüche erweitern und kürzen (Bruchbilder, Schreibweise, Eingabefelder) ---------- */
+:root { --bf-paper: #ffffff; --bf-line: #1b1b1b; --bf-frame: #1b1b1b; }
+:root[data-theme="dark"] { --bf-paper: #e4e1d8; --bf-frame: #f1f1f1; }
+.bf { display: block; width: 100%; height: auto; }
+.bf .bg { fill: var(--bf-paper); }
+.bf .on { fill: var(--fc); }
+.bf .ln { stroke: var(--bf-line); stroke-width: 2; }
+.bf .ln.thin { stroke-width: 1.2; }
+.bf .ln.fade { stroke-dasharray: 3 4; opacity: .4; }
+.bf .ln.old { stroke-width: 4.5; }
+.bf .frame { fill: none; stroke: var(--bf-frame); stroke-width: 3; }
+.bf .warn { fill: rgba(255, 90, 95, .18); stroke: var(--bad); stroke-width: 5; stroke-linejoin: round; }
+.f-gelb { --fc: #ffb703; } .f-blau { --fc: #3fc1e6; } .f-lila { --fc: #a78bfa; } .f-orange { --fc: #ff8c42; }
+.bf-spot { width: 100%; max-width: 330px; margin: 1rem auto 0; }
+.bf-spot.kreis { max-width: 240px; }
+.bf-spot.streifen { max-width: 420px; }
+.bf-pair { display: flex; align-items: center; justify-content: center; gap: .6rem; margin-top: .9rem; }
+.bf-cell { flex: 1 1 0; min-width: 0; max-width: 230px; }
+.bf-cell .bf.rund { max-width: 190px; margin: 0 auto; }
+.bf-arrow { font-size: 1.6rem; font-weight: 700; color: var(--muted); }
+.eqk { position: relative; display: inline-block; padding: 0 .3em; font-weight: 700; line-height: 1; vertical-align: middle; }
+.eqk small { position: absolute; left: 50%; transform: translateX(-50%); font-size: .62em; line-height: 1; color: var(--accent); }
+.eqk.up small { bottom: calc(100% - .05em); }
+.eqk.down small { top: calc(100% - .05em); }
+.body .eqk { margin: 0 .1em; }
+.frac.bad { color: var(--bad); }
+.fbar .fill.bad { background: var(--bad); }
+.falsch { font-size: .9rem; color: var(--bad); margin-left: .3rem; }
+.frac-in { display: inline-flex; flex-direction: column; align-items: stretch; gap: .3rem; vertical-align: middle; }
+.frac-in .bar { height: 3px; border-radius: 2px; background: currentColor; }
+.equation .gap-in { font-size: 1.25rem; width: 3.4em; margin: 0; padding: .25em .3em; }
+.quiz .numeric.satz { font-size: 1.15rem; font-weight: 600; justify-content: center; margin-top: 1rem; }
+.quiz .numeric .num.kurz { width: 4.2rem; text-align: center; }
+.live.tip { background: var(--accent-soft); border-radius: 10px; padding: .6rem .9rem; margin-top: .9rem; }
+.howto { background: var(--surface-2); border-radius: 12px; padding: .8rem 1rem; margin-bottom: 1rem; line-height: 2; }
+.chip.hit { border-color: var(--ok); }
+.chip.miss { border-color: var(--bad); opacity: .55; }
+.gaps.prod { margin-top: 1rem; min-height: 5.6rem; }
+.gaps.prod .line { line-height: 1.6; }
+.merk-eq { font-size: 1.2rem; font-weight: 700; padding: .5rem 0 .6rem; }
+@media (max-width: 560px) { .bf-pair { gap: .35rem; } .bf-arrow { font-size: 1.2rem; } .howto { line-height: 1.9; } }

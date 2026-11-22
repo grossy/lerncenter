@@ -1,4 +1,6 @@
 // Theme (hell/dunkel) – wird auf allen Seiten geteilt.
+// Lädt auch die Stummschaltung für Tests, damit «?mute=1» auf jeder Seite beider Center gilt.
+export { isMuted } from './mute.js';
 const KEY = 'lerncenter-theme';
 export function initTheme() {
   let saved = null;

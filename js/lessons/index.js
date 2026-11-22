@@ -63,6 +63,17 @@ export const catalog = [
     load: () => import('./anteil.js'),
   },
   {
+    id: 'erweitern',
+    title: 'Brüche erweitern und kürzen',
+    subject: 'Mathe',
+    grade: 6,
+    emoji: '✂️',
+    color: 'c-math',
+    description: 'Verschiedene Brüche mit gleichem Wert: feiner schneiden heisst erweitern, Teile zusammenlegen heisst kürzen. Mit der Schreibweise und den Aufgaben 40 bis 45 aus dem Heft, dazu immer neue Übungsaufgaben.',
+    available: true,
+    load: () => import('./erweitern.js'),
+  },
+  {
     id: 'party-words',
     title: 'Birthday party ideas: Vokabeln',
     subject: 'Englisch',
